@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using AgaHackTools.Memory;
-using AgaHackTools.Native.Structs;
+using AgaHackTools.Main.Memory;
+using AgaHackTools.Main.Native.Structs;
 
-
-namespace AgaHackTools.Native
+namespace AgaHackTools.Main.Native
 {
-    public static class NativeMethods
+    public unsafe static class NativeMethods
     {
         #region CloseHandle
 
@@ -115,6 +114,17 @@ namespace AgaHackTools.Native
         public static extern bool VirtualProtect(IntPtr lpAddress, int dwSize,
             MemoryProtectionFlags flNewProtect, out MemoryProtectionFlags lpflOldProtect);
 
+        #endregion
+
+        #region MoveMemory
+        /// <summary>
+        /// Moves a block of memory from one location to another.
+        /// </summary>
+        /// <param name="dest">A pointer to the starting address of the move destination.</param>
+        /// <param name="src">A pointer to the starting address of the block of memory to be moved.</param>
+        /// <param name="size">The size of the block of memory to move, in bytes.</param>
+        [DllImport("Kernel32.dll", EntryPoint = "RtlMoveMemory", SetLastError = false)]
+        public static extern void MoveMemory(void* dest, void* src, int size);
         #endregion
     }
 }

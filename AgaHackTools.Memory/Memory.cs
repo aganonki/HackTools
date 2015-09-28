@@ -1,40 +1,47 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using AgaHackTools.Interfaces;
-using AgaHackTools.Native;
-using AgaHackTools.Native.Structs;
+using AgaHackTools.Main.Interfaces;
+using AgaHackTools.Main.Memory;
+using AgaHackTools.Main.Native;
+using AgaHackTools.Main.Native.Structs;
 
 namespace AgaHackTools.Memory
 {
     public unsafe class Memory :  Pointer,IMemory
     {
-        public IPattern Pattern { get; set; }
-
-        public Memory(string name, bool openHande= false):base(Process.GetProcessesByName(name).First())
+        #region Constructor
+        public Memory(string name, bool openHande = false) : base(Process.GetProcessesByName(name).First())
         {
-            Modules = new Hashtable();
+            Modules = new Dictionary<string, ISmartPointer>();
             _process = Process.GetProcessesByName(name).First();
             if (openHande)
                 OpenHandle(ProcessAccessFlags.AllAccess);
         }
+        #endregion
 
+        #region Properties
+        /// <summary>
+        /// Pattern implementation
+        /// </summary>
+        public IPattern Pattern { get; set; }
+
+        /// <summary>
+        /// Allows to read from modules of without manual BaseAdress. For ex.: memory["client.dll"].Read<int>(offset);
+        /// </summary>
+        /// <param name="moduleName">ModuleName</param>
+        /// <returns>ISmartPonter implementation with BaseAddress set</returns>
         public ISmartPointer this[string moduleName] => FetchModule(moduleName);
 
-        public Hashtable Modules;
+        public IDictionary<string,ISmartPointer> Modules;
 
         public bool IsRunning => !Handle.IsInvalid && !Handle.IsClosed && !MainProcess.HasExited;
 
         public Process MainProcess => _process;
-        private Process _process;
+        private Process _process; 
+        #endregion
+
         #region Methods
         /// <summary>
         /// Opens a handle to a process
@@ -60,8 +67,12 @@ namespace AgaHackTools.Memory
                     if (module.FileName.EndsWith(name))
                         return module.BaseAddress;
             }
-            catch { }
+            catch
+            {
+                //TODO Log this
+            }
             return IntPtr.Zero;
+
         }
 
         private ISmartPointer FetchModule(string moduleName)
@@ -91,6 +102,7 @@ namespace AgaHackTools.Memory
             GC.SuppressFinalize(this);
         }
         #endregion
+
         #region Public Events
 
         /// <summary>

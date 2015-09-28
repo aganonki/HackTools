@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AgaHackTools.Native;
-using AgaHackTools.Native.Structs;
+using AgaHackTools.Main.Native;
+using AgaHackTools.Main.Native.Structs;
 
 namespace AgaHackTools.Memory
 {

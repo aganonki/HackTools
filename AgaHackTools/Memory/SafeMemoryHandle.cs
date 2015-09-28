@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
-using AgaHackTools.Native;
+using AgaHackTools.Main.Native;
 using Microsoft.Win32.SafeHandles;
 
-namespace AgaHackTools.Memory
+namespace AgaHackTools.Main.Memory
 {
     /// <summary>
     ///     Represents a Win32 handle safely managed.

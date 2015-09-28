@@ -1,12 +1,11 @@
-﻿using AgaHackTools.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
+using AgaHackTools.Main.Interfaces;
+using AgaHackTools.Main.Memory;
+using AgaHackTools.Main.Native;
 
 namespace AgaHackTools.Memory
 {
@@ -23,10 +22,7 @@ namespace AgaHackTools.Memory
             Handle = new SafeMemoryHandle(proc.MainWindowHandle);
             ForceRelative = ImageBase != null;
         }
-
-
-
-
+     
         public SafeMemoryHandle Handle { get; set; }
 
         public bool ForceRelative{ get; set; }
@@ -49,7 +45,7 @@ namespace AgaHackTools.Memory
         /// <typeparam name="T"> Generic type parameter. </typeparam>
         /// <param name="addresses"> A variable-length parameters list containing addresses. </param>
         /// <returns> . </returns>
-        public T Read<T>(IntPtr address, bool isRelative = false, params IntPtr[] addresses) where T : struct
+        public T ReadMultilevelPointer<T>(IntPtr address, bool isRelative = false, params IntPtr[] addresses) where T : struct
         {
             if (isRelative || ForceRelative)
                 address = GetAbsolute(address);
@@ -72,7 +68,7 @@ namespace AgaHackTools.Memory
         /// <typeparam name="T"> Generic type parameter. </typeparam>
         /// <param name="address"> The address. </param>
         /// <param name="count"> Number of. </param>
-        public T[] Read<T>(IntPtr address, int count, bool isRelative = false) where T : struct
+        public T[] ReadArray<T>(IntPtr address, int count, bool isRelative = false) where T : struct
         {
             if (isRelative||ForceRelative)
                 address = GetAbsolute(address);
@@ -134,7 +130,7 @@ namespace AgaHackTools.Memory
         /// <param name="address"> The address. </param>
         /// <param name="value"> The value. </param>
         /// <returns> true if it succeeds, false if it fails. </returns>
-        public void Write<T>(IntPtr address, T[] array, bool isRelative = false) where T : struct
+        public void WriteArray<T>(IntPtr address, T[] array, bool isRelative = false) where T : struct
         {
             if (isRelative||ForceRelative)
                 address = GetAbsolute(address);
@@ -147,14 +143,14 @@ namespace AgaHackTools.Memory
         }
         #endregion
 
-        #region Smart Memory methods
+        #region ISmartMemory methods
 
         public IntPtr ImageBase;
         public T Read<T>(object address, bool isRelative = false) where T : struct
             => Read<T>(address.ToIntPtr(), isRelative);
 
 
-        public T Read<T>(object address, bool isRelative = false, params object[] offsets) where T : struct
+        public T ReadMultilevelPointer<T>(object address, bool isRelative = false, params object[] offsets) where T : struct
         {
             var temp = Read<IntPtr>(address.ToIntPtr(), isRelative);
 
@@ -165,8 +161,8 @@ namespace AgaHackTools.Memory
             return Read<T>(temp + (int)offsets[offsets.Length - 1]);
         }
 
-        public T[] Read<T>(object address, int count, bool isRelative = false) where T : struct
-        => Read<T>(address.ToIntPtr(), count, isRelative);
+        public T[] ReadArray<T>(object address, int count, bool isRelative = false) where T : struct
+        => ReadArray<T>(address.ToIntPtr(), count, isRelative);
 
 
         public string ReadString(object address, Encoding encoding, int maxLength = 256, bool isRelative = false)
@@ -185,8 +181,8 @@ namespace AgaHackTools.Memory
         => Write(address.ToIntPtr(), value, isRelative);
 
 
-        public void Write<T>(object address, T[] array, bool isRelative = false) where T : struct
-        => Write(address.ToIntPtr(), array, isRelative);
+        public void WriteArray<T>(object address, T[] array, bool isRelative = false) where T : struct
+        => WriteArray(address.ToIntPtr(), array, isRelative);
 
         #endregion
 
@@ -201,9 +197,6 @@ namespace AgaHackTools.Memory
             }
             return ret;
         }
-
-        [DllImport("Kernel32.dll", EntryPoint = "RtlMoveMemory", SetLastError = false)]
-        private static extern void MoveMemory(void* dest, void* src, int size);
 
         [HandleProcessCorruptedStateExceptions]
         private T InternalRead<T>(IntPtr address)
@@ -231,7 +224,7 @@ namespace AgaHackTools.Memory
                             T o = default(T);
                             void* ptr = SizeCache<T>.GetUnsafePtr(ref o);
 
-                            MoveMemory(ptr, (void*)address, SizeCache<T>.Size);
+                            NativeMethods.MoveMemory(ptr, (void*)address, SizeCache<T>.Size);
 
                             return o;
                         }

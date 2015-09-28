@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AgaHackTools.Memory
+namespace AgaHackTools.Main.Memory
 {
     /// <summary>
     ///     A cheaty way to get very fast "Marshal.SizeOf" support without the overhead of the Marshaler each time.
@@ -31,7 +27,7 @@ namespace AgaHackTools.Memory
         /// <summary> True if this type requires the Marshaler to map variables. (No direct pointer dereferencing) </summary>
         public static readonly bool TypeRequiresMarshal;
 
-        internal static readonly GetUnsafePtrDelegate GetUnsafePtr;
+        public static readonly GetUnsafePtrDelegate GetUnsafePtr;
 
         static SizeCache()
         {
@@ -133,7 +129,7 @@ namespace AgaHackTools.Memory
 
         #region Nested type: GetUnsafePtrDelegate
 
-        internal unsafe delegate void* GetUnsafePtrDelegate(ref T value);
+        public unsafe delegate void* GetUnsafePtrDelegate(ref T value);
 
         #endregion
     }

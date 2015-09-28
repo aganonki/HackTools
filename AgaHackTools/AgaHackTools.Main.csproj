@@ -7,7 +7,7 @@
     <ProjectGuid>{F3B39D55-7DFB-47BF-A701-9F0358054297}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgaHackTools</RootNamespace>
+    <RootNamespace>AgaHackTools.Main</RootNamespace>
     <AssemblyName>AgaHackTools</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,22 +41,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configurations\Config.cs" />
     <Compile Include="Default\Log.cs" />
     <Compile Include="Interfaces\ILog.cs" />
     <Compile Include="Interfaces\IMemory.cs" />
     <Compile Include="Interfaces\IModuleManager.cs" />
+    <Compile Include="Interfaces\IConfigurationManager.cs" />
     <Compile Include="Interfaces\IPattern.cs" />
     <Compile Include="Memory\MemoryUtilities.cs" />
     <Compile Include="Memory\SafeMemoryHandle.cs" />
+    <Compile Include="Memory\SizeCache.cs" />
     <Compile Include="ModuleManager.cs" />
     <Compile Include="Native\NativeMethods.cs" />
     <Compile Include="Native\Structs\ProcessAccessFlags.cs" />
     <Compile Include="Native\Structs\ProtectionFlags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Configurations\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

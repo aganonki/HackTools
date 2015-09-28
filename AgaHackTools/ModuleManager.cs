@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using AgaHackTools.Default;
-using AgaHackTools.Interfaces;
+using AgaHackTools.Main.Default;
+using AgaHackTools.Main.Interfaces;
 
-namespace AgaHackTools
+namespace AgaHackTools.Main
 {
     public class ModuleManager : IModuleManager
     {

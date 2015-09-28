@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AgaHackTools.Interfaces;
+using AgaHackTools.Main.Interfaces;
 
-namespace AgaHackTools.Default
+namespace AgaHackTools.Main.Default
 {
     public class Log : ILog
     {

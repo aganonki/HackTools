@@ -45,7 +45,6 @@
     <Compile Include="MemoryProtection.cs" />
     <Compile Include="Pointer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SizeCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AgaHackTools\AgaHackTools.Main.csproj">
