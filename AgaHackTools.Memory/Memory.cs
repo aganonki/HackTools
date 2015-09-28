@@ -9,6 +9,9 @@ using AgaHackTools.Main.Native.Structs;
 
 namespace AgaHackTools.Memory
 {
+    /// <summary>
+    /// Implementation of IMemory
+    /// </summary>
     public unsafe class Memory :  Pointer,IMemory
     {
         #region Constructor

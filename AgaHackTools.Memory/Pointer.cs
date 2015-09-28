@@ -15,17 +15,16 @@ namespace AgaHackTools.Memory
         {
             Handle = handle;
             ImageBase = baseAddress;
-            ForceRelative = baseAddress != null;
         }
         public Pointer(Process proc)
         {
             Handle = new SafeMemoryHandle(proc.MainWindowHandle);
-            ForceRelative = ImageBase != null;
+            ImageBase = IntPtr.Zero;
         }
      
         public SafeMemoryHandle Handle { get; set; }
 
-        public bool ForceRelative{ get; set; }
+        public bool ForceRelative => ImageBase != IntPtr.Zero;
 
         #region IMemory methods
         /// <summary> Reads a value from the specified address in memory. </summary>

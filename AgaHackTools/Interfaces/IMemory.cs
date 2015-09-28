@@ -29,7 +29,7 @@ namespace AgaHackTools.Main.Interfaces
 
     public interface ISmartPointer : IPointer
     {
-        bool ForceRelative { get; set; }
+        bool ForceRelative { get; }
         T Read<T>(object address, bool isRelative = false) where T : struct;
         T ReadMultilevelPointer<T>(object address, bool isRelative = false, params object[] offsets) where T : struct;
         T[] ReadArray<T>(object address, int count, bool isRelative = false) where T : struct;

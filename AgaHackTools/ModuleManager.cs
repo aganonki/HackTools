@@ -42,12 +42,12 @@ namespace AgaHackTools.Main
             }
         }
 
-        public T ActivateInstance<T>(Type instance) where T : new()
+        public T ActivateInstance<T>(Type instance)
         {
 
             return ActivateInstance<T>(instance,null);
         }
-        public T ActivateInstance<T>(Type instance, params object[] args) where T : new()
+        public T ActivateInstance<T>(Type instance, params object[] args)
         {
             T result;
             try
@@ -58,7 +58,7 @@ namespace AgaHackTools.Main
             {
 
                 Logger.Fatal(e);
-                result = new T();
+                result = default(T);
             }
             return result;
         }
