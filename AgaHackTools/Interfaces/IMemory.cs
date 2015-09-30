@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using AgaHackTools.Main.Memory;
@@ -8,14 +9,19 @@ namespace AgaHackTools.Main.Interfaces
     public interface IMemory : IPointer
     {
         Process MainProcess { get; }
-        ISmartPointer this[string moduleName] { get; }
         IPattern Pattern { get; set; }
-        bool IsRunning { get; }       
+        bool IsRunning { get; }
+        void Load();
+    }
+    public interface ISmartMemory : IMemory,ISmartPointer
+    {
+        ISmartPointer this[string moduleName] { get; }
+        IDictionary<string, ISmartPointer> Modules { get; }
     }
     public interface IPointer : IDisposable
     {
         SafeMemoryHandle Handle { get; set; }
-
+        bool Internal { get; set; }
         T Read<T>(IntPtr address, bool isRelative = false) where T : struct;
         T ReadMultilevelPointer<T>(IntPtr address, bool isRelative = false, params IntPtr[] offsets) where T : struct;
         T[] ReadArray<T>(IntPtr address, int count, bool isRelative = false) where T : struct;

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F3B39D55-7DFB-47BF-A701-9F0358054297}</ProjectGuid>
+    <ProjectGuid>{443896B9-4C4C-4032-B87D-0C906C75A562}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgaHackTools.Main</RootNamespace>
-    <AssemblyName>AgaHackTools</AssemblyName>
+    <RootNamespace>AgaHackTools.Memory</RootNamespace>
+    <AssemblyName>AgaHackTools.Memory</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,28 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractImplementations\Module.cs" />
-    <Compile Include="Configurations\Config.cs" />
-    <Compile Include="Default\DefaultInput.cs" />
-    <Compile Include="Default\Log.cs" />
-    <Compile Include="Interfaces\ILog.cs" />
-    <Compile Include="Interfaces\IMemory.cs" />
-    <Compile Include="Interfaces\IModule.cs" />
-    <Compile Include="Interfaces\IModuleManager.cs" />
-    <Compile Include="Interfaces\IConfigurationManager.cs" />
-    <Compile Include="Interfaces\IProcess.cs" />
-    <Compile Include="Interfaces\IPattern.cs" />
-    <Compile Include="Memory\MemoryUtilities.cs" />
-    <Compile Include="Memory\SafeMemoryHandle.cs" />
-    <Compile Include="Memory\SizeCache.cs" />
-    <Compile Include="ModuleManager.cs" />
-    <Compile Include="Native\NativeMethods.cs" />
-    <Compile Include="Native\Structs\MouseEventFlags.cs" />
-    <Compile Include="Native\Structs\ProcessAccessFlags.cs" />
-    <Compile Include="Native\Structs\ProtectionFlags.cs" />
+    <Compile Include="Memory.cs" />
+    <Compile Include="MemoryProtection.cs" />
+    <Compile Include="Pointer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\AgaHackTools\AgaHackTools.Main.csproj">
+      <Project>{f3b39d55-7dfb-47bf-a701-9f0358054297}</Project>
+      <Name>AgaHackTools.Main</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

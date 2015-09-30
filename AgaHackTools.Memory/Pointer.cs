@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
@@ -11,20 +12,28 @@ namespace AgaHackTools.Memory
 {
     public unsafe class Pointer : ISmartPointer
     {
-        public Pointer(SafeMemoryHandle handle,IntPtr baseAddress)
+        public Pointer(SafeMemoryHandle handle,IntPtr baseAddress, bool internalMem = false)
         {
             Handle = handle;
             ImageBase = baseAddress;
+            Internal = internalMem;
         }
-        public Pointer(Process proc)
+        //public Pointer(SafeMemoryHandle handle)
+        //{
+        //    Handle = handle;
+        //    ImageBase = IntPtr.Zero;
+        //}
+        public Pointer(bool internalMem = false)
         {
-            Handle = new SafeMemoryHandle(proc.MainWindowHandle);
             ImageBase = IntPtr.Zero;
+            Internal = internalMem;
         }
-     
+
         public SafeMemoryHandle Handle { get; set; }
 
         public bool ForceRelative => ImageBase != IntPtr.Zero;
+
+        public bool Internal { get; set; }
 
         #region IMemory methods
         /// <summary> Reads a value from the specified address in memory. </summary>
@@ -36,7 +45,9 @@ namespace AgaHackTools.Memory
         {
             if (isRelative||ForceRelative)
                 address = GetAbsolute(address);
+            if(Internal)
             return InternalRead<T>(address);
+            return ExternalRead<T>(address);
         }
 
         /// <summary> Reads a value from the specified address in memory. This method is used for multi-pointer dereferencing.</summary>
@@ -84,7 +95,7 @@ namespace AgaHackTools.Memory
         {
             if (isRelative||ForceRelative)
                 address = GetAbsolute(address);
-            var data = ReadByte(address, maxLength);
+            var data = ReadBytes(address, maxLength);
             var text = encoding.GetChars(data).ToString();
             if (text.Contains("\0"))
                 text = text.Substring(0, text.IndexOf('\0'));
@@ -113,14 +124,15 @@ namespace AgaHackTools.Memory
         {
             if (isRelative||ForceRelative)
                 address = GetAbsolute(address);
-            Marshal.StructureToPtr(value, address, false);
+            if(Internal)
+                WriteInternal(address,value);
+            else
+                WriteExternal(address,value);
         }
 
         public void WriteString(IntPtr address, string text, Encoding encoding, bool isRelative = false)
         {
-            if (isRelative||ForceRelative)
-                address = GetAbsolute(address);
-            WriteBytes(address, encoding.GetBytes(text));
+            Write(address, encoding.GetBytes(text),isRelative);
         }
 
         /// <summary> Writes an array of values to the address in memory. </summary>
@@ -145,6 +157,18 @@ namespace AgaHackTools.Memory
         #region ISmartMemory methods
 
         public IntPtr ImageBase;
+
+        /// <summary>
+        /// Gets the absolute.
+        /// </summary>
+        /// <param name="relative">The relative.</param>
+        /// <returns></returns>
+        /// <remarks>Created 2012-01-16 19:41</remarks>
+        public IntPtr GetAbsolute(IntPtr relative)
+        {
+            return ImageBase + (int)relative;
+        }
+
         public T Read<T>(object address, bool isRelative = false) where T : struct
             => Read<T>(address.ToIntPtr(), isRelative);
 
@@ -186,8 +210,12 @@ namespace AgaHackTools.Memory
         #endregion
 
         #region Protected methods
-        protected byte[] ReadByte(IntPtr address, int count)
+        protected byte[] ReadBytes(IntPtr address, int count)
         {
+            if (count == 0)
+                return new byte[0];
+            if (address == IntPtr.Zero)
+                throw new ArgumentException("Address cannot be zero.", "address");
             var ret = new byte[count];
             var ptr = (byte*)address;
             for (int i = 0; i < count; i++)
@@ -283,27 +311,76 @@ namespace AgaHackTools.Memory
             }
         }
 
-        protected void WriteBytes(IntPtr address, byte[] bytes)
+        private T ExternalRead<T>(IntPtr address)
         {
-            using (new MemoryProtection(address, bytes.Length))
+            fixed (byte* b = ReadBytes(address, SizeCache<T>.Size))
             {
-                var ptr = (byte*)address;
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    ptr[i] = bytes[i];
-                }
+                return InternalRead<T>((IntPtr)b);
             }
         }
 
-        /// <summary>
-        /// Gets the absolute.
-        /// </summary>
-        /// <param name="relative">The relative.</param>
-        /// <returns></returns>
-        /// <remarks>Created 2012-01-16 19:41</remarks>
-        public IntPtr GetAbsolute(IntPtr relative)
+        private void WriteBytes(IntPtr address, byte[] bytes)
         {
-            return ImageBase + (int)relative;
+            using (new MemoryProtection(Handle,address, bytes.Length,Internal))
+            {
+                if(Internal)
+                    WriteInternalBytes(address,bytes);
+                else
+                    WriteExternalBytes(address, bytes);
+            }
+        }
+
+        private void WriteInternal<T>(IntPtr address, T value)
+        {
+            Marshal.StructureToPtr(value, address, false);
+        }
+
+        private void WriteExternal<T>(IntPtr address, T value)
+        {
+            byte[] buffer;
+            var size = SizeCache<T>.Size;
+            IntPtr hObj = Marshal.AllocHGlobal(size);
+            try
+            {
+                Marshal.StructureToPtr(value, hObj, false);
+
+                buffer = new byte[size];
+                Marshal.Copy(hObj, buffer, 0, size);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(hObj);
+            }
+            bool success;
+            int numWritten;
+            using (new MemoryProtection(Handle, address, size, Internal))
+            {
+                success = NativeMethods.WriteProcessMemory(Handle, address, buffer, size, out numWritten);
+            }
+            if(!success)
+                throw new AccessViolationException(string.Format(
+                    "Could not write the specified bytes! {0} to {1} [{2}]", buffer.Length, address.ToString("X8"),
+                    new Win32Exception(Marshal.GetLastWin32Error()).Message));
+        }
+        protected void WriteInternalBytes(IntPtr address, byte[] bytes)
+        {
+            var ptr = (byte*)address;
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                ptr[i] = bytes[i];
+            }
+        }
+        protected void WriteExternalBytes(IntPtr address, byte[] bytes)
+        {
+            int numWritten;
+            bool success = NativeMethods.WriteProcessMemory(Handle, address, bytes, bytes.Length, out numWritten);
+
+            if (!success || numWritten != bytes.Length)
+            {
+                throw new AccessViolationException(string.Format(
+                    "Could not write the specified bytes! {0} to {1} [{2}]", bytes.Length, address.ToString("X8"),
+                    new Win32Exception(Marshal.GetLastWin32Error()).Message));
+            }
         }
         #endregion
 

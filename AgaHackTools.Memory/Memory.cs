@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using AgaHackTools.Main.Interfaces;
@@ -12,16 +13,34 @@ namespace AgaHackTools.Memory
     /// <summary>
     /// Implementation of IMemory
     /// </summary>
-    public unsafe class Memory :  Pointer,IMemory
+    public unsafe class Memory :  Pointer, ISmartMemory
     {
         #region Constructor
-        public Memory(string name, bool openHande = false) : base(Process.GetProcessesByName(name).First())
+        /// <summary>
+        /// Creates memory class. Id name is null or empty the its internal memory class
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="openHande"></param>
+        public Memory(string name = null) : base(string.IsNullOrEmpty(name))
         {
             Modules = new Dictionary<string, ISmartPointer>();
-            _process = Process.GetProcessesByName(name).First();
-            if (openHande)
-                OpenHandle(ProcessAccessFlags.AllAccess);
+            _name = name;
+            Load();
         }
+
+        /// <summary>
+        /// Gets process from name and open handle.
+        /// If Name is null or empty then consider it as internal and get current process.
+        /// </summary>
+        public void Load()
+        {
+            var isInternal = string.IsNullOrEmpty(_name);
+            _process = isInternal ? Process.GetCurrentProcess() :Process.GetProcessesByName(_name).FirstOrDefault();
+            if(_process==null)
+                return;
+            Handle = isInternal ?  new SafeMemoryHandle(_process.MainWindowHandle):OpenHandle(ProcessAccessFlags.AllAccess) ;
+        }
+
         #endregion
 
         #region Properties
@@ -37,12 +56,16 @@ namespace AgaHackTools.Memory
         /// <returns>ISmartPonter implementation with BaseAddress set</returns>
         public ISmartPointer this[string moduleName] => FetchModule(moduleName);
 
-        public IDictionary<string,ISmartPointer> Modules;
-
-        public bool IsRunning => !Handle.IsInvalid && !Handle.IsClosed && !MainProcess.HasExited;
+        public IDictionary<string,ISmartPointer> Modules { get; }
+        public bool IsRunning => Handle!=null&&_process!=null&&!Handle.IsInvalid && !Handle.IsClosed && !MainProcess.HasExited;
 
         public Process MainProcess => _process;
-        private Process _process; 
+
+        #endregion
+
+        #region Fields
+        private string _name;
+        private Process _process;
         #endregion
 
         #region Methods
@@ -82,12 +105,13 @@ namespace AgaHackTools.Memory
         {
             if (Modules.ContainsKey(moduleName))
                 return (ISmartPointer)Modules[moduleName];
-            else
-            {
-                var newModule = new Pointer(Handle, GetModuleBase(moduleName));
-                Modules.Add(moduleName, newModule);
-                return newModule;
-            }
+            var modulebase = GetModuleBase(moduleName);
+            // return null if not found
+            if (modulebase.Equals(IntPtr.Zero))
+                return null;
+            var newModule = new Pointer(Handle, modulebase,Internal);
+            Modules.Add(moduleName, newModule);
+            return newModule;
         }         
         
         /// <summary>

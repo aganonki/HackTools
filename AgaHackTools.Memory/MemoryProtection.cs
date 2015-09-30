@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using AgaHackTools.Main.Memory;
 using AgaHackTools.Main.Native;
 using AgaHackTools.Main.Native.Structs;
 
@@ -8,9 +9,17 @@ namespace AgaHackTools.Memory
     public class MemoryProtection : IDisposable
     {
         /// <summary>
+        ///     Internal or external protection required
+        /// </summary>
+        public bool Internal { get; }        
+        /// <summary>
         ///     The base address of the altered memory.
         /// </summary>
-        public IntPtr BaseAddress { get; }
+        public IntPtr BaseAddress { get; }        
+        /// <summary>
+        ///     The base address of the altered memory.
+        /// </summary>
+        public SafeMemoryHandle Handle { get; }
 
         /// <summary>
         ///     Defines the new protection applied to the memory.
@@ -27,11 +36,13 @@ namespace AgaHackTools.Memory
         public int Size { get; }
         
 
-        public MemoryProtection(IntPtr address, int size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite)
+        public MemoryProtection(SafeMemoryHandle handle, IntPtr address, int size,bool @internal = true, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite)
         {
             BaseAddress = address;
             NewProtection = protection;
             Size = size;
+            Internal = @internal;
+            Handle = handle;
 
             OldProtection = ChangeMemoryProtection(protection);
         }
@@ -74,8 +85,14 @@ namespace AgaHackTools.Memory
             // Create the variable storing the old protection of the memory page
             MemoryProtectionFlags oldProtection;
 
+            bool result;
             // Change the protection in the target process
-            if (NativeMethods.VirtualProtect(BaseAddress, Size, protection, out oldProtection))
+            if (Internal)
+                result = NativeMethods.VirtualProtect(BaseAddress, Size, protection, out oldProtection);
+            else
+                result = NativeMethods.VirtualProtectEx(Handle, BaseAddress, Size, protection, out oldProtection);
+
+            if (result)
             {
                 // Return the old protection
                 return oldProtection;

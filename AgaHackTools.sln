@@ -5,7 +5,19 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Main", "AgaHackTools\AgaHackTools.Main.csproj", "{F3B39D55-7DFB-47BF-A701-9F0358054297}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.InternalMemory", "AgaHackTools.Memory\AgaHackTools.InternalMemory.csproj", "{443896B9-4C4C-4032-B87D-0C906C75A562}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Memory", "AgaHackTools.Memory\AgaHackTools.Memory.csproj", "{443896B9-4C4C-4032-B87D-0C906C75A562}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example", "AgaHackTools.Example\AgaHackTools.Example.csproj", "{0B4D9EFD-C5ED-4957-B654-85B3435B427D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ModuleExamples", "ModuleExamples", "{B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.Triggerbot", "AgaHackTools.Example.Triggerbot\AgaHackTools.Example.Triggerbot.csproj", "{DB23C2B9-CBD6-49DF-A643-526F4612092B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.Shared", "AgaHackTools.Example.Shared\AgaHackTools.Example.Shared.csproj", "{64B5668A-40D2-459A-9C7B-1AC5CE75DD93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.MemoryModule", "AgaHackTools.Example.Memory\AgaHackTools.Example.MemoryModule.csproj", "{F07B540F-BEB1-471F-AF80-B7358122904A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{12144BB9-13F3-4EAF-946E-9238059DC6E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +33,30 @@ Global
 		{443896B9-4C4C-4032-B87D-0C906C75A562}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{443896B9-4C4C-4032-B87D-0C906C75A562}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{443896B9-4C4C-4032-B87D-0C906C75A562}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B4D9EFD-C5ED-4957-B654-85B3435B427D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B4D9EFD-C5ED-4957-B654-85B3435B427D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B4D9EFD-C5ED-4957-B654-85B3435B427D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B4D9EFD-C5ED-4957-B654-85B3435B427D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB23C2B9-CBD6-49DF-A643-526F4612092B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB23C2B9-CBD6-49DF-A643-526F4612092B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB23C2B9-CBD6-49DF-A643-526F4612092B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB23C2B9-CBD6-49DF-A643-526F4612092B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64B5668A-40D2-459A-9C7B-1AC5CE75DD93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64B5668A-40D2-459A-9C7B-1AC5CE75DD93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64B5668A-40D2-459A-9C7B-1AC5CE75DD93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64B5668A-40D2-459A-9C7B-1AC5CE75DD93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F07B540F-BEB1-471F-AF80-B7358122904A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F07B540F-BEB1-471F-AF80-B7358122904A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F07B540F-BEB1-471F-AF80-B7358122904A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F07B540F-BEB1-471F-AF80-B7358122904A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DB23C2B9-CBD6-49DF-A643-526F4612092B} = {B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}
+		{64B5668A-40D2-459A-9C7B-1AC5CE75DD93} = {12144BB9-13F3-4EAF-946E-9238059DC6E0}
+		{F07B540F-BEB1-471F-AF80-B7358122904A} = {B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}
+		{12144BB9-13F3-4EAF-946E-9238059DC6E0} = {B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}
 	EndGlobalSection
 EndGlobal
