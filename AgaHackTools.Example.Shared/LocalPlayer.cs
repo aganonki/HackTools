@@ -11,21 +11,21 @@ namespace AgaHackTools.Example.Shared
     [StructLayout(LayoutKind.Explicit)]
     public struct LocalPlayer
     {
-        [FieldOffset(0x64)]
+        [FieldOffset(Offsets.m_dwIndex)]
         public int m_iID;
 
-        [FieldOffset(0xF0)]
+        [FieldOffset(Offsets.m_iTeamNum)]
         public int m_iTeam;
 
-        [FieldOffset(0xFC)]
+        [FieldOffset(Offsets.m_iHealth)]
         public int m_iHealth;
 
-        [FieldOffset(0x8ce4)]
+        [FieldOffset(Offsets.m_iCrossHairID)]
         public int m_iCrosshairId;
 
         public bool IsValid()
         {
-            return this.m_iID != 0 && this.m_iHealth > 0 && (m_iTeam == 2 || m_iTeam == 3);
+            return m_iID != 0 && m_iHealth > 0 && (m_iTeam == 2 || m_iTeam == 3);
         }
     }
 }

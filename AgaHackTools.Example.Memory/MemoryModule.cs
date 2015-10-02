@@ -11,7 +11,7 @@ namespace AgaHackTools.Example.MemoryModule
     {
         private ISmartMemory _memory;
         private bool offsetsLoaded;
-        public MemoryModule(ISmartMemory memory, CSGOCurrentData csgo, Hashtable config) : base(csgo, config)
+        public MemoryModule(ISmartMemory memory, CSGOCurrentData csgo, Hashtable config, int tick = 60, ILog logger = null) : base(csgo, config, tick, logger)
         {
             _memory= memory;
             offsetsLoaded = false;
@@ -22,7 +22,12 @@ namespace AgaHackTools.Example.MemoryModule
         protected override void Process(object state)
         {
             var csgo = (CSGOCurrentData) state;
-            if (!_memory.IsRunning) return;
+            if (!_memory.IsRunning)
+            {
+                _memory.Load();
+                return;
+            }
+            
             if (!offsetsLoaded)
             {
                 LoadOffsets();

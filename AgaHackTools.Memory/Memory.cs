@@ -34,7 +34,7 @@ namespace AgaHackTools.Memory
         /// </summary>
         public void Load()
         {
-            var isInternal = string.IsNullOrEmpty(_name);
+            var isInternal = string.IsNullOrEmpty(_name) || Process.GetProcessesByName(_name).FirstOrDefault() == Process.GetCurrentProcess();
             _process = isInternal ? Process.GetCurrentProcess() :Process.GetProcessesByName(_name).FirstOrDefault();
             if(_process==null)
                 return;

@@ -14,7 +14,7 @@ namespace AgaHackTools.Example.Triggerbot
     public class Trigger: Module<CSGOCurrentData>
     {
         private ISmartMemory _memory;
-        public Trigger(ISmartMemory memory, CSGOCurrentData data,Hashtable config):base(data,config)
+        public Trigger(ISmartMemory memory, CSGOCurrentData data,Hashtable config,int tick = 60, ILog logger = null):base(data,config,tick,logger)
         {
             _memory = memory;
         }
@@ -25,7 +25,7 @@ namespace AgaHackTools.Example.Triggerbot
         {
             var csgoData = (CSGOCurrentData) state;
             if (!_memory.IsRunning) return;
-            if (Configuration["Triggerbot"].Equals(true))
+            if ((bool)Configuration["Triggerbot"])
             if (csgoData.LocalPlayer.IsValid())
             {
                 if(csgoData.LocalPlayer.m_iCrosshairId<1)
