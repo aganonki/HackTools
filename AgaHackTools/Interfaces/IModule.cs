@@ -32,6 +32,6 @@ namespace AgaHackTools.Main.Interfaces
         /// <summary>
         /// On update event
         /// </summary>
-        EventHandler<T> OnUpdate { get; set; }
+        event EventHandler<T> OnUpdate;
     }
 }

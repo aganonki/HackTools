@@ -18,7 +18,7 @@ namespace AgaHackTools.Main.AbstractImplementations
         #endregion
 
         #region Events
-        public EventHandler<T> OnUpdate { get; set; } 
+        public event EventHandler<T> OnUpdate; 
         #endregion
 
         #region Fields
