@@ -11,7 +11,7 @@ namespace AgaHackTools.Example.MemoryModule
     {
         private ISmartMemory _memory;
         private bool offsetsLoaded;
-        public MemoryModule(ISmartMemory memory, CSGOCurrentData csgo, Hashtable config, int tick = 60, ILog logger = null) : base(csgo, config, tick, logger)
+        public MemoryModule(ISmartMemory memory, CSGOCurrentData csgo, int tick = 60, ILog logger = null) : base(csgo, logger, tick)
         {
             _memory= memory;
             offsetsLoaded = false;

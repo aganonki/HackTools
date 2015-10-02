@@ -20,7 +20,7 @@ namespace AgaHackTools.Main.Interfaces
         /// <summary>
         /// Configurations
         /// </summary>
-        Hashtable Configuration { get; set; }
+        //Tuple<A,B> Configuration { get; set; }
         /// <summary>
         /// Start
         /// </summary>

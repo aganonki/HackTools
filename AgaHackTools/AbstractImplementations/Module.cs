@@ -29,7 +29,7 @@ namespace AgaHackTools.Main.AbstractImplementations
         #endregion
 
         #region Properties
-        public Hashtable Configuration { get; set; }
+        //public Hashtable Configuration { get; set; }
         public int Ticks {
             get { return 1000/_interval;}
             set { _interval = 1000/value;
@@ -72,17 +72,17 @@ namespace AgaHackTools.Main.AbstractImplementations
         {         
             Logger = logger;
         }
-        /// <summary>
-        /// Constructor for module
-        /// </summary>
-        /// <param name="updateData">Object that will be used in Process method</param>
-        /// <param name="config"> Configuration</param>
-        /// <param name="ticks">Ticks per second</param>
-        /// <param name="logger">Logger instance</param>
-        public Module(T updateData,Hashtable config, int ticks = 60, ILog logger = null) : this(updateData,logger, ticks)
-        {         
-            Configuration = config;
-        }
+        ///// <summary>
+        ///// Constructor for module
+        ///// </summary>
+        ///// <param name="updateData">Object that will be used in Process method</param>
+        ///// <param name="config"> Configuration</param>
+        ///// <param name="ticks">Ticks per second</param>
+        ///// <param name="logger">Logger instance</param>
+        //public Module(T updateData,Hashtable config, int ticks = 60, ILog logger = null) : this(updateData,logger, ticks)
+        //{         
+        //    Configuration = config;
+        //}
 
         ~Module()
         {
