@@ -37,7 +37,7 @@ namespace AgaHackTools.Example.MemoryModule
             //Reading all data here
             try
             {
-                csgo.LocalPlayer = _memory["client.dll"].Read<LocalPlayer>(Offsets.LocalPlayer);
+                ReadMemory(csgo);
             }
             catch (Win32Exception e)
             {
@@ -46,6 +46,12 @@ namespace AgaHackTools.Example.MemoryModule
             //run base for OnUpdate event
             base.Process(state);
         }
+
+        private void ReadMemory(CSGOCurrentData csgo)
+        {
+            csgo.LocalPlayer = _memory["client.dll"].Read<LocalPlayer>(Offsets.LocalPlayer);
+        }
+
 
         private void LoadOffsets()
         {

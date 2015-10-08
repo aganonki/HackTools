@@ -46,20 +46,24 @@
     <Compile Include="Default\DefaultInput.cs" />
     <Compile Include="Default\Log.cs" />
     <Compile Include="Interfaces\ILog.cs" />
-    <Compile Include="Interfaces\IMemory.cs" />
-    <Compile Include="Interfaces\IModule.cs" />
+    <Compile Include="Interfaces\Memory\IMemory.cs" />
+    <Compile Include="Interfaces\Memory\IModule.cs" />
     <Compile Include="Interfaces\IModuleManager.cs" />
     <Compile Include="Interfaces\IConfigurationManager.cs" />
     <Compile Include="Interfaces\IProcess.cs" />
-    <Compile Include="Interfaces\IPattern.cs" />
+    <Compile Include="Interfaces\Memory\IPattern.cs" />
+    <Compile Include="Interfaces\Memory\IProcessFunction.cs" />
+    <Compile Include="Interfaces\Memory\IProcessModule.cs" />
     <Compile Include="Memory\MemoryUtilities.cs" />
     <Compile Include="Memory\SafeMemoryHandle.cs" />
     <Compile Include="Memory\SizeCache.cs" />
     <Compile Include="ModuleManager.cs" />
+    <Compile Include="Native\NativeHelper.cs" />
     <Compile Include="Native\NativeMethods.cs" />
     <Compile Include="Native\Structs\MouseEventFlags.cs" />
     <Compile Include="Native\Structs\ProcessAccessFlags.cs" />
     <Compile Include="Native\Structs\ProtectionFlags.cs" />
+    <Compile Include="Native\VirtualClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

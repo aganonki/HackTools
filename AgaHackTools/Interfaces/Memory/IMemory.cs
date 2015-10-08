@@ -15,8 +15,8 @@ namespace AgaHackTools.Main.Interfaces
     }
     public interface ISmartMemory : IMemory,ISmartPointer
     {
-        ISmartPointer this[string moduleName] { get; }
-        IDictionary<string, ISmartPointer> Modules { get; }
+        IProcessModule this[string moduleName] { get; }
+        IDictionary<string, IProcessModule> Modules { get; }
     }
     public interface IPointer : IDisposable
     {

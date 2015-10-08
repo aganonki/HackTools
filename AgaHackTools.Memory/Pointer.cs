@@ -18,6 +18,12 @@ namespace AgaHackTools.Memory
             ImageBase = baseAddress;
             Internal = internalMem;
         }
+        public Pointer(Pointer pointer)
+        {
+            Handle = pointer.Handle;
+            ImageBase = pointer.ImageBase;
+            Internal = pointer.Internal;
+        }
         //public Pointer(SafeMemoryHandle handle)
         //{
         //    Handle = handle;
@@ -37,7 +43,6 @@ namespace AgaHackTools.Memory
 
         #region IMemory methods
         /// <summary> Reads a value from the specified address in memory. </summary>
-        /// <remarks> Created 3/24/2012. </remarks>
         /// <typeparam name="T"> Generic type parameter. </typeparam>
         /// <param name="address"> The address. </param>
         /// <returns> . </returns>
@@ -51,7 +56,6 @@ namespace AgaHackTools.Memory
         }
 
         /// <summary> Reads a value from the specified address in memory. This method is used for multi-pointer dereferencing.</summary>
-        /// <remarks> Created 3/24/2012. </remarks>
         /// <typeparam name="T"> Generic type parameter. </typeparam>
         /// <param name="addresses"> A variable-length parameters list containing addresses. </param>
         /// <returns> . </returns>
@@ -74,7 +78,6 @@ namespace AgaHackTools.Memory
         }
 
         /// <summary> Reads an array of values from the specified address in memory. </summary>
-        /// <remarks> Created 3/24/2012. </remarks>
         /// <typeparam name="T"> Generic type parameter. </typeparam>
         /// <param name="address"> The address. </param>
         /// <param name="count"> Number of. </param>
@@ -103,7 +106,6 @@ namespace AgaHackTools.Memory
 
         }
         /// <summary> Writes bytes to the address in memory. </summary>
-        /// <remarks> Created 3/24/2012. </remarks>
         /// <typeparam name="T"> Generic type parameter. </typeparam>
         /// <param name="address"> The address. </param>
         /// <param name="value"> The value. </param>
@@ -115,7 +117,6 @@ namespace AgaHackTools.Memory
             WriteBytes(address, value);
         }
         /// <summary> Writes a value specified to the address in memory. </summary>
-        /// <remarks> Created 3/24/2012. </remarks>
         /// <typeparam name="T"> Generic type parameter. </typeparam>
         /// <param name="address"> The address. </param>
         /// <param name="value"> The value. </param>
@@ -136,7 +137,6 @@ namespace AgaHackTools.Memory
         }
 
         /// <summary> Writes an array of values to the address in memory. </summary>
-        /// <remarks> Created 3/24/2012. </remarks>
         /// <typeparam name="T"> Generic type parameter. </typeparam>
         /// <param name="address"> The address. </param>
         /// <param name="value"> The value. </param>
@@ -321,18 +321,21 @@ namespace AgaHackTools.Memory
 
         private void WriteBytes(IntPtr address, byte[] bytes)
         {
-            using (new MemoryProtection(Handle,address, bytes.Length,Internal))
+            using (new MemoryProtection(Handle, address, bytes.Length, Internal))
             {
-                if(Internal)
-                    WriteInternalBytes(address,bytes);
+                if (Internal)
+                    WriteInternalBytes(address, bytes);
                 else
                     WriteExternalBytes(address, bytes);
-            }
+            }       
         }
 
         private void WriteInternal<T>(IntPtr address, T value)
         {
-            Marshal.StructureToPtr(value, address, false);
+            using (new MemoryProtection(Handle, address, SizeCache<T>.Size, Internal))
+            {
+                Marshal.StructureToPtr(value, address, false);
+            }
         }
 
         private void WriteExternal<T>(IntPtr address, T value)
@@ -351,16 +354,7 @@ namespace AgaHackTools.Memory
             {
                 Marshal.FreeHGlobal(hObj);
             }
-            bool success;
-            int numWritten;
-            using (new MemoryProtection(Handle, address, size, Internal))
-            {
-                success = NativeMethods.WriteProcessMemory(Handle, address, buffer, size, out numWritten);
-            }
-            if(!success)
-                throw new AccessViolationException(string.Format(
-                    "Could not write the specified bytes! {0} to {1} [{2}]", buffer.Length, address.ToString("X8"),
-                    new Win32Exception(Marshal.GetLastWin32Error()).Message));
+            WriteExternalBytes(address, buffer);
         }
         protected void WriteInternalBytes(IntPtr address, byte[] bytes)
         {
@@ -373,14 +367,14 @@ namespace AgaHackTools.Memory
         protected void WriteExternalBytes(IntPtr address, byte[] bytes)
         {
             int numWritten;
-            bool success = NativeMethods.WriteProcessMemory(Handle, address, bytes, bytes.Length, out numWritten);
+            bool success;
 
-            if (!success || numWritten != bytes.Length)
-            {
+            success = NativeMethods.WriteProcessMemory(Handle, address, bytes, bytes.Length, out numWritten);
+            
+            if (!success)
                 throw new AccessViolationException(string.Format(
                     "Could not write the specified bytes! {0} to {1} [{2}]", bytes.Length, address.ToString("X8"),
                     new Win32Exception(Marshal.GetLastWin32Error()).Message));
-            }
         }
         #endregion
 

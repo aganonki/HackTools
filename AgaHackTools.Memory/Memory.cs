@@ -23,7 +23,7 @@ namespace AgaHackTools.Memory
         /// <param name="openHande"></param>
         public Memory(string name = null) : base(string.IsNullOrEmpty(name))
         {
-            Modules = new Dictionary<string, ISmartPointer>();
+            Modules = new Dictionary<string, IProcessModule>();
             _name = name;
             Load();
         }
@@ -54,9 +54,9 @@ namespace AgaHackTools.Memory
         /// </summary>
         /// <param name="moduleName">ModuleName</param>
         /// <returns>ISmartPonter implementation with BaseAddress set</returns>
-        public ISmartPointer this[string moduleName] => FetchModule(moduleName);
+        public IProcessModule this[string moduleName] => FetchModule(moduleName);
 
-        public IDictionary<string,ISmartPointer> Modules { get; }
+        public IDictionary<string, IProcessModule> Modules { get; }
         public bool IsRunning => Handle!=null&&_process!=null&&!Handle.IsInvalid && !Handle.IsClosed && !MainProcess.HasExited;
 
         public Process MainProcess => _process;
@@ -85,31 +85,31 @@ namespace AgaHackTools.Memory
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public IntPtr GetModuleBase(string name)
+        public ProcessModule GetModule(string name)
         {
             try
             {
                 foreach (ProcessModule module in MainProcess.Modules)
                     if (module.FileName.EndsWith(name))
-                        return module.BaseAddress;
+                        return module;
             }
             catch
             {
                 //TODO Log this
             }
-            return IntPtr.Zero;
+            return null;
 
         }
 
-        private ISmartPointer FetchModule(string moduleName)
+        private IProcessModule FetchModule(string moduleName)
         {
             if (Modules.ContainsKey(moduleName))
-                return (ISmartPointer)Modules[moduleName];
-            var modulebase = GetModuleBase(moduleName);
+                return (IProcessModule)Modules[moduleName];
+            var modulebase = GetModule(moduleName);
             // return null if not found
-            if (modulebase.Equals(IntPtr.Zero))
+            if (modulebase==null)
                 return null;
-            var newModule = new Pointer(Handle, modulebase,Internal);
+            var newModule = new Module(Handle, modulebase,Internal);
             Modules.Add(moduleName, newModule);
             return newModule;
         }         
