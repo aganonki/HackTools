@@ -99,7 +99,7 @@ namespace AgaHackTools.Memory
             if (isRelative||ForceRelative)
                 address = GetAbsolute(address);
             var data = ReadBytes(address, maxLength);
-            var text = encoding.GetChars(data).ToString();
+            var text = new string(encoding.GetChars(data));
             if (text.Contains("\0"))
                 text = text.Substring(0, text.IndexOf('\0'));
             return text;
@@ -216,6 +216,11 @@ namespace AgaHackTools.Memory
                 return new byte[0];
             if (address == IntPtr.Zero)
                 throw new ArgumentException("Address cannot be zero.", "address");
+            return Internal ? ReadBytesInternal(address, count) : ReadBytesExternal(address, count);
+        }
+
+        protected byte[] ReadBytesInternal(IntPtr address, int count)
+        {
             var ret = new byte[count];
             var ptr = (byte*)address;
             for (int i = 0; i < count; i++)
@@ -223,6 +228,18 @@ namespace AgaHackTools.Memory
                 ret[i] = ptr[i];
             }
             return ret;
+        }
+        protected byte[] ReadBytesExternal(IntPtr address, int length)
+        {
+            IntPtr numBytes = IntPtr.Zero;
+            var data = new byte[length];
+            bool result = true;
+
+             result = NativeMethods.ReadProcessMemory(Handle, address, data, length, out numBytes);
+            
+            if (!result)
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            return data;
         }
 
         [HandleProcessCorruptedStateExceptions]
@@ -252,7 +269,7 @@ namespace AgaHackTools.Memory
                             void* ptr = SizeCache<T>.GetUnsafePtr(ref o);
 
                             NativeMethods.MoveMemory(ptr, (void*)address, SizeCache<T>.Size);
-
+                            
                             return o;
                         }
 

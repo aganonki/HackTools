@@ -115,9 +115,9 @@ namespace AgaHackTools.Main.AbstractImplementations
         /// </summary>
         public virtual void Start()
         {
-            _timer.Change(0, _interval);
+            _timer.Change(_interval, _interval);
             _started = true;
-            Logger.Info("Started: " + Name);
+            //Logger.Info("Started: " + Name);
         }
         /// <summary>
         /// Stop module

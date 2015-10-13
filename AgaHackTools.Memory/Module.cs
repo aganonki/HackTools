@@ -81,10 +81,11 @@ namespace AgaHackTools.Memory
                 var functionAddress = new IntPtr(ThisModule.BaseAddress.ToInt64() + offset);
                 // Rebase the function with the remote module
                 var function = new Function(functionAddress, functionName);
-
-                // Store the function in the cache
-                CachedFunctions.Add(functionName, function);
-
+                lock (CachedFunctions)
+                {
+                    // Store the function in the cache
+                    CachedFunctions.Add(functionName, function);
+                }
                 // Return the function rebased with the remote module
                 return function;
             }

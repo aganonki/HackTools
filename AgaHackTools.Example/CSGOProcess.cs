@@ -23,7 +23,7 @@ namespace AgaHackTools.Example
 
         #region Fields
         ModuleManager moduleManager;
-        IMemory _memory;
+        ISmartMemory _memory;
         private List<string> moduleList;
         private Hashtable Configs;
         public CSGOCurrentData CSGO;
@@ -64,18 +64,18 @@ namespace AgaHackTools.Example
         #region Public
         public void Load()
         {
-
+            Logger.Info(AppDomain.CurrentDomain.BaseDirectory);
             Logger.Info("Getting startup modules!");
             //TODO REad modules and Configs from cfg file
             //Only for now
-            moduleList.Add("AgaHackTools.Example.Triggerbot");
+            //moduleList.Add("AgaHackTools.Example.Triggerbot");
             moduleList.Add("AgaHackTools.Example.MemoryModule");
             Configs.Add("Triggerbot",true);
             //Only for now
             Logger.Info("Loading modules!");
             //Load IMemory
             var memoryModuleAssembly = moduleManager.GetInstance("AgaHackTools.Memory.dll", "ISmartMemory");
-            _memory = moduleManager.ActivateInstance<ISmartMemory>(memoryModuleAssembly, false);
+            _memory = moduleManager.ActivateInstance<ISmartMemory>(memoryModuleAssembly, "");
 
             Logger.Info("Loaded: Memory implementation lib");
             //Load ModuleResponsable for memoryUpdates
@@ -83,7 +83,7 @@ namespace AgaHackTools.Example
             {
                 // for 
                 var newModuleType = moduleManager.GetInstance(item, "IModule`1");
-                var newModule = moduleManager.ActivateInstance<IModule<CSGOCurrentData>>(newModuleType, new object[] {_memory, CSGO, Configs});
+                var newModule = moduleManager.ActivateInstance<IModule<CSGOCurrentData>>(newModuleType, new object[] {_memory, CSGO,60,Logger});
                 Modules.Add(newModule);
                 Logger.Info("Loaded: "+ newModule.Name);
             }   

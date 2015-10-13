@@ -13,7 +13,7 @@ namespace AgaHackTools.Memory
         }
         public IntPtr BaseAddress { get; }
         public string Name { get; }
-        public T GetDelegate<T>(T value)
+        public T GetDelegate<T>()
         {
            return Marshal.GetDelegateForFunctionPointer<T>(BaseAddress);
         }

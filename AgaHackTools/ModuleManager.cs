@@ -17,8 +17,10 @@ namespace AgaHackTools.Main
             try
             {
                 var file = fileName.EndsWith(".dll") ? fileName : fileName + ".dll";
-                file = Path.GetFullPath(file);
+                if(!File.Exists(file))
+                file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,file);
                 /* Load in the assembly. */
+                Logger.Info("Loading: " + file);
                 var moduleAssembly = Assembly.LoadFile(file);
 
                 /* Get the types of classes that are in this assembly. */
