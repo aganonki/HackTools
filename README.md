@@ -11,6 +11,7 @@ TODO:
 add pattern scanning
 Test out internal memory methods.
 # Credits:
-GreyMagic lib creator - Apoc.
-MemorySharp lib creator.
-lolp1
+GreyMagic lib creator - Apoc;
+MemorySharp lib creator;
+lolp1;
+miceiken - DomainWrapper
