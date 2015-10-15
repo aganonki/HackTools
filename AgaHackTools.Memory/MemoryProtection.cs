@@ -8,33 +8,7 @@ namespace AgaHackTools.Memory
 {
     public class MemoryProtection : IDisposable
     {
-        /// <summary>
-        ///     Internal or external protection required
-        /// </summary>
-        public bool Internal { get; }        
-        /// <summary>
-        ///     The base address of the altered memory.
-        /// </summary>
-        public IntPtr BaseAddress { get; }        
-        /// <summary>
-        ///     The base address of the altered memory.
-        /// </summary>
-        public SafeMemoryHandle Handle { get; }
-
-        /// <summary>
-        ///     Defines the new protection applied to the memory.
-        /// </summary>
-        public MemoryProtectionFlags NewProtection { get; }
-        /// <summary>
-        ///     References the inital protection of the memory.
-        /// </summary>
-        public MemoryProtectionFlags OldProtection { get; }
-
-        /// <summary>
-        ///     The size of the altered memory.
-        /// </summary>
-        public int Size { get; }
-        
+        #region Constructors
 
         public MemoryProtection(SafeMemoryHandle handle, IntPtr address, int size,bool @internal = true, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite)
         {
@@ -47,14 +21,9 @@ namespace AgaHackTools.Memory
             OldProtection = ChangeMemoryProtection(protection);
         }
 
-        /// <summary>
-        ///     Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
-        /// </summary>
-        ~MemoryProtection()
-        {
-                Dispose();
-        }
+        #endregion
 
+        #region Interface members
 
         /// <summary>
         ///     Restores the initial protection of the memory.
@@ -67,7 +36,43 @@ namespace AgaHackTools.Memory
             GC.SuppressFinalize(this);
         }
 
-        #region ChangeMemoryProtection
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        ///     Internal or external protection required
+        /// </summary>
+        public bool Internal { get; }
+
+        /// <summary>
+        ///     The base address of the altered memory.
+        /// </summary>
+        public IntPtr BaseAddress { get; }
+
+        /// <summary>
+        ///     The base address of the altered memory.
+        /// </summary>
+        public SafeMemoryHandle Handle { get; }
+
+        /// <summary>
+        ///     Defines the new protection applied to the memory.
+        /// </summary>
+        public MemoryProtectionFlags NewProtection { get; }
+
+        /// <summary>
+        ///     References the inital protection of the memory.
+        /// </summary>
+        public MemoryProtectionFlags OldProtection { get; }
+
+        /// <summary>
+        ///     The size of the altered memory.
+        /// </summary>
+        public int Size { get; }
+
+        #endregion
+
+        #region Public methods
 
         /// <summary>
         ///     Changes the protection on a region of committed pages in the virtual address space of a specified process.
@@ -102,6 +107,18 @@ namespace AgaHackTools.Memory
             throw new Win32Exception(
                 string.Format("Couldn't change the protection of the memory at 0x{0} of {1} byte(s) to {2}.",
                     BaseAddress.ToString("X"), Size, protection));
+        }
+
+        #endregion
+
+        #region Other
+
+        /// <summary>
+        ///     Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
+        /// </summary>
+        ~MemoryProtection()
+        {
+                Dispose();
         }
 
         #endregion

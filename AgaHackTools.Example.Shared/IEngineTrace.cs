@@ -11,16 +11,31 @@ namespace AgaHackTools.Example.Shared
 {
     public unsafe class IEngineTrace
     {
+        #region Delegates
+
+        public delegate void TraceRay(Ray_t ray, uint fMask, IntPtr** pTraceFilter,ref  CGameTrace pTrace);
+
+        #endregion
+
+        #region Fields
+
+        public const uint RayMask = 0x4600400B;
+        public VirtualClass Class;
+
+        public TraceRay Trace;
+
+        #endregion
+
+        #region Constructors
+
         public IEngineTrace(VirtualClass clas)
         {
             Class = clas;
         }
-        public VirtualClass Class;
 
-        public const uint RayMask = 0x4600400B;  
-        public delegate void TraceRay(Ray_t ray, uint fMask, IntPtr** pTraceFilter,ref  CGameTrace pTrace);
+        #endregion
 
-        public TraceRay Trace;
+        #region Public methods
 
         public bool IsVisable(IntPtr local, Vector3 start, Vector3 end)
         {
@@ -34,5 +49,6 @@ namespace AgaHackTools.Example.Shared
             return tr.IsVisible();
         }
 
+        #endregion
     }
 }

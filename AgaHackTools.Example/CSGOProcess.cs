@@ -14,31 +14,18 @@ namespace AgaHackTools.Example
 {
     public class CSGOProcess : IProcess
     {
-
-        #region Delegates
-        #endregion
-
-        #region Events
-        #endregion
-
         #region Fields
-        ModuleManager moduleManager;
+
         ISmartMemory _memory;
-        private List<string> moduleList;
         private Hashtable Configs;
         public CSGOCurrentData CSGO;
+        private List<string> moduleList;
+        ModuleManager moduleManager;
+
         #endregion
 
-        #region Properties
-        public ILog Logger { get; set; }
-        public bool IsRunning { get; }
-        public List<IModule<CSGOCurrentData>> Modules { get; set; }
-        #endregion
+        #region Constructors
 
-        #region This
-        #endregion
-
-        #region Constructors/Destructor
         /// <summary>
         /// CustomFormattedClass Constructor.
         /// </summary>
@@ -52,16 +39,11 @@ namespace AgaHackTools.Example
             CSGO = new CSGOCurrentData();
             // Construct.
         }
-        ~CSGOProcess()
-        {
-            // Construct.
-        }
+
         #endregion
 
-        #region Methods
-        #region Private
-        #endregion
-        #region Public
+        #region Interface members
+
         public void Load()
         {
             Logger.Info(AppDomain.CurrentDomain.BaseDirectory);
@@ -100,11 +82,25 @@ namespace AgaHackTools.Example
             Logger.Info("Stoping modules!");
             Modules.ForEach(x => x.Stop());
         }
+
         #endregion
+
+        #region Properties
+
+        public ILog Logger { get; set; }
+        public bool IsRunning { get; }
+
+        public List<IModule<CSGOCurrentData>> Modules { get; set; }
+
         #endregion
 
+        #region Other
 
+        ~CSGOProcess()
+        {
+            // Construct.
+        }
 
-
+        #endregion
     }
 }

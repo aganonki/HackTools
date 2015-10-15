@@ -12,18 +12,28 @@ namespace AgaHackTools.Memory
 {
     public unsafe class Pointer : ISmartPointer
     {
-        public Pointer(SafeMemoryHandle handle,IntPtr baseAddress, bool internalMem = false)
+        #region Fields
+
+        public IntPtr ImageBase;
+
+        #endregion
+
+        #region Constructors
+
+        public Pointer(SafeMemoryHandle handle, IntPtr baseAddress, bool internalMem = false)
         {
             Handle = handle;
             ImageBase = baseAddress;
             Internal = internalMem;
         }
+
         public Pointer(Pointer pointer)
         {
             Handle = pointer.Handle;
             ImageBase = pointer.ImageBase;
             Internal = pointer.Internal;
         }
+
         //public Pointer(SafeMemoryHandle handle)
         //{
         //    Handle = handle;
@@ -35,13 +45,10 @@ namespace AgaHackTools.Memory
             Internal = internalMem;
         }
 
-        public SafeMemoryHandle Handle { get; set; }
+        #endregion
 
-        public bool ForceRelative => ImageBase != IntPtr.Zero;
+        #region Interface members
 
-        public bool Internal { get; set; }
-
-        #region IMemory methods
         /// <summary> Reads a value from the specified address in memory. </summary>
         /// <typeparam name="T"> Generic type parameter. </typeparam>
         /// <param name="address"> The address. </param>
@@ -105,6 +112,7 @@ namespace AgaHackTools.Memory
             return text;
 
         }
+
         /// <summary> Writes bytes to the address in memory. </summary>
         /// <typeparam name="T"> Generic type parameter. </typeparam>
         /// <param name="address"> The address. </param>
@@ -116,6 +124,7 @@ namespace AgaHackTools.Memory
                 address = GetAbsolute(address);
             WriteBytes(address, value);
         }
+
         /// <summary> Writes a value specified to the address in memory. </summary>
         /// <typeparam name="T"> Generic type parameter. </typeparam>
         /// <param name="address"> The address. </param>
@@ -151,22 +160,6 @@ namespace AgaHackTools.Memory
                 T val = array[i];
                 Write(address + (i * size), val);
             }
-        }
-        #endregion
-
-        #region ISmartMemory methods
-
-        public IntPtr ImageBase;
-
-        /// <summary>
-        /// Gets the absolute.
-        /// </summary>
-        /// <param name="relative">The relative.</param>
-        /// <returns></returns>
-        /// <remarks>Created 2012-01-16 19:41</remarks>
-        public IntPtr GetAbsolute(IntPtr relative)
-        {
-            return ImageBase + (int)relative;
         }
 
         public T Read<T>(object address, bool isRelative = false) where T : struct
@@ -207,9 +200,50 @@ namespace AgaHackTools.Memory
         public void WriteArray<T>(object address, T[] array, bool isRelative = false) where T : struct
         => WriteArray(address.ToIntPtr(), array, isRelative);
 
+        /// <summary>
+        ///     Releases all resources used by the object.
+        /// </summary>
+        public virtual void Dispose()
+        {
+            // Raise the event OnDispose
+            OnDispose?.Invoke(this, new EventArgs());
+
+            //// Close the process handle
+            //Handle.Close();
+
+            // Avoid the finalizer
+            GC.SuppressFinalize(this);
+        }
+
         #endregion
 
-        #region Protected methods
+        #region Properties
+
+        public SafeMemoryHandle Handle { get; set; }
+
+        public bool ForceRelative => ImageBase != IntPtr.Zero;
+
+        public bool Internal { get; set; }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Gets the absolute.
+        /// </summary>
+        /// <param name="relative">The relative.</param>
+        /// <returns></returns>
+        /// <remarks>Created 2012-01-16 19:41</remarks>
+        public IntPtr GetAbsolute(IntPtr relative)
+        {
+            return ImageBase + (int)relative;
+        }
+
+        #endregion
+
+        #region Private methods
+
         protected byte[] ReadBytes(IntPtr address, int count)
         {
             if (count == 0)
@@ -229,6 +263,7 @@ namespace AgaHackTools.Memory
             }
             return ret;
         }
+
         protected byte[] ReadBytesExternal(IntPtr address, int length)
         {
             IntPtr numBytes = IntPtr.Zero;
@@ -373,6 +408,7 @@ namespace AgaHackTools.Memory
             }
             WriteExternalBytes(address, buffer);
         }
+
         protected void WriteInternalBytes(IntPtr address, byte[] bytes)
         {
             var ptr = (byte*)address;
@@ -381,6 +417,7 @@ namespace AgaHackTools.Memory
                 ptr[i] = bytes[i];
             }
         }
+
         protected void WriteExternalBytes(IntPtr address, byte[] bytes)
         {
             int numWritten;
@@ -393,30 +430,12 @@ namespace AgaHackTools.Memory
                     "Could not write the specified bytes! {0} to {1} [{2}]", bytes.Length, address.ToString("X8"),
                     new Win32Exception(Marshal.GetLastWin32Error()).Message));
         }
-        #endregion
 
-        #region Public Events
+        #endregion
 
         /// <summary>
         ///     Raises when the object is disposed.
         /// </summary>
         public virtual event EventHandler OnDispose;
-
-        #endregion
-
-        /// <summary>
-        ///     Releases all resources used by the object.
-        /// </summary>
-        public virtual void Dispose()
-        {
-            // Raise the event OnDispose
-            OnDispose?.Invoke(this, new EventArgs());
-
-            //// Close the process handle
-            //Handle.Close();
-
-            // Avoid the finalizer
-            GC.SuppressFinalize(this);
-        }
     }
 }

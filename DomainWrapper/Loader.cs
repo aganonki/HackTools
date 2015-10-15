@@ -14,9 +14,9 @@ namespace DomainWrapper
     public static class Loader
     {
 
-        [DllExport("DllMain", CallingConvention.Cdecl)]
+        [DllExport("Host", CallingConvention.Cdecl)]
         [STAThread]
-        public static void Host([MarshalAs(UnmanagedType.LPStr)]string loadDir, [MarshalAs(UnmanagedType.LPStr)]string APP_NAME)
+        public static void Host([MarshalAs(UnmanagedType.LPStr)]string loadDir, [MarshalAs(UnmanagedType.LPStr)]string name)
         {
 #if LAUNCH_MDA
             System.Diagnostics.Debugger.Launch();
@@ -24,11 +24,11 @@ namespace DomainWrapper
             loadDir = Path.GetDirectoryName(loadDir);
             Trace.Assert(Directory.Exists(loadDir));
 
-            Trace.Listeners.Add(new TextWriterTraceListener(Path.Combine(loadDir, @"Logs\", APP_NAME + ".Loader.log")));
+            Trace.Listeners.Add(new TextWriterTraceListener(Path.Combine(loadDir, @"Logs\", name + ".Loader.log")));
 
             try
             {
-                using (var host = new PathedDomainHost(APP_NAME, loadDir))
+                using (var host = new PathedDomainHost(name, loadDir))
                 {
                     host.Execute();
                 }
