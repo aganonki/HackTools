@@ -16,11 +16,11 @@ namespace AgaHackTools.Memory
     public unsafe class Memory :  Pointer, ISmartMemory
     {
         #region Constructor
+
         /// <summary>
         /// Creates memory class. Id name is null or empty the its internal memory class
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="openHande"></param>
         public Memory(string name = null) : base(string.IsNullOrEmpty(name))
         {
             Modules = new Dictionary<string, IProcessModule>();
@@ -34,8 +34,14 @@ namespace AgaHackTools.Memory
         /// </summary>
         public void Load()
         {
-            var isInternal = string.IsNullOrEmpty(_name) || Process.GetProcessesByName(_name).FirstOrDefault() == Process.GetCurrentProcess();
-            _process = isInternal ? Process.GetCurrentProcess() :Process.GetProcessesByName(_name).FirstOrDefault();
+            bool isInternal = string.IsNullOrEmpty(_name);
+            var processByName = Process.GetProcessesByName(_name).FirstOrDefault();
+            var currentProcess = Process.GetCurrentProcess();
+            if (processByName == null)
+                return;
+            if (!isInternal)
+                isInternal = processByName.ProcessName.Equals(currentProcess.ProcessName);
+               _process = isInternal ? currentProcess : processByName;
             if(_process==null)
                 return;
             Handle = isInternal ?  new SafeMemoryHandle(_process.MainWindowHandle):OpenHandle(ProcessAccessFlags.AllAccess) ;

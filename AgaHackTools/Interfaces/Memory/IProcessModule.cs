@@ -2,7 +2,7 @@
 
 namespace AgaHackTools.Main.Interfaces
 {
-    public interface IProcessModule : ISmartPointer
+    public interface IProcessModule : ISmartPointer, IPattern
     {
         ProcessModule ThisModule { get; }
         IProcessFunction FindFunction(string functionName);
