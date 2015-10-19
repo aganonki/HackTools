@@ -31,7 +31,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -52,11 +52,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AgaHackTools.Example.Shared\AgaHackTools.Example.Shared.csproj">
+    <ProjectReference Include="..\..\Resources\AgaHackTools.Example.Shared\AgaHackTools.Example.Shared.csproj">
       <Project>{64b5668a-40d2-459a-9c7b-1ac5ce75dd93}</Project>
       <Name>AgaHackTools.Example.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AgaHackTools\AgaHackTools.Main.csproj">
+    <ProjectReference Include="..\..\..\..\AgaHackTools\AgaHackTools.Main.csproj">
       <Project>{f3b39d55-7dfb-47bf-a701-9f0358054297}</Project>
       <Name>AgaHackTools.Main</Name>
     </ProjectReference>

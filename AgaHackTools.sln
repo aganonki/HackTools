@@ -7,15 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Main", "AgaHac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Memory", "AgaHackTools.Memory\AgaHackTools.Memory.csproj", "{443896B9-4C4C-4032-B87D-0C906C75A562}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example", "AgaHackTools.Example\AgaHackTools.Example.csproj", "{0B4D9EFD-C5ED-4957-B654-85B3435B427D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example", "ModuleExamples\CSGO\AgaHackTools.Example\AgaHackTools.Example.csproj", "{0B4D9EFD-C5ED-4957-B654-85B3435B427D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ModuleExamples", "ModuleExamples", "{B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.Triggerbot", "AgaHackTools.Example.Triggerbot\AgaHackTools.Example.Triggerbot.csproj", "{DB23C2B9-CBD6-49DF-A643-526F4612092B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.Triggerbot", "ModuleExamples\CSGO\Modules\AgaHackTools.Example.Triggerbot\AgaHackTools.Example.Triggerbot.csproj", "{DB23C2B9-CBD6-49DF-A643-526F4612092B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.Shared", "AgaHackTools.Example.Shared\AgaHackTools.Example.Shared.csproj", "{64B5668A-40D2-459A-9C7B-1AC5CE75DD93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.Shared", "ModuleExamples\CSGO\Resources\AgaHackTools.Example.Shared\AgaHackTools.Example.Shared.csproj", "{64B5668A-40D2-459A-9C7B-1AC5CE75DD93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.MemoryModule", "AgaHackTools.Example.Memory\AgaHackTools.Example.MemoryModule.csproj", "{F07B540F-BEB1-471F-AF80-B7358122904A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.MemoryModule", "ModuleExamples\CSGO\Modules\AgaHackTools.Example.Memory\AgaHackTools.Example.MemoryModule.csproj", "{F07B540F-BEB1-471F-AF80-B7358122904A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{12144BB9-13F3-4EAF-946E-9238059DC6E0}"
 EndProject
@@ -90,6 +90,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{0B4D9EFD-C5ED-4957-B654-85B3435B427D} = {B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}
 		{DB23C2B9-CBD6-49DF-A643-526F4612092B} = {B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}
 		{64B5668A-40D2-459A-9C7B-1AC5CE75DD93} = {12144BB9-13F3-4EAF-946E-9238059DC6E0}
 		{F07B540F-BEB1-471F-AF80-B7358122904A} = {B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}
