@@ -21,7 +21,7 @@ namespace DomainWrapper
 #if LAUNCH_MDA
             System.Diagnostics.Debugger.Launch();
 #endif
-            loadDir = Path.GetDirectoryName(loadDir);
+            //loadDir = Path.GetDirectoryName(loadDir);
             Trace.Assert(Directory.Exists(loadDir));
 
             Trace.Listeners.Add(new TextWriterTraceListener(Path.Combine(loadDir, @"Logs\", name + ".Loader.log")));
