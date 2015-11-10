@@ -83,8 +83,10 @@ namespace AgaHackTools.Example.MemoryModule
         private unsafe void LoadOffsets()
         {
             //TODO Add scanning
-            //Offsets.LocalPlayer = _memory.Pattern.
+            
             Logger.Info("LoadOffsets");
+            OffsetScanner.ScanOffsets(_memory);
+
             if (_memory.Internal)
             {
                var createInter= _memory["engine.dll"]["CreateInterface"];

@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\</OutputPath>
+    <OutputPath>..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -56,6 +56,7 @@
     <Compile Include="Default\Log.cs" />
     <Compile Include="Default\Pattern.cs" />
     <Compile Include="Default\ScanResult.cs" />
+    <Compile Include="Extensions\Object.cs" />
     <Compile Include="Interfaces\ILog.cs" />
     <Compile Include="Interfaces\Memory\IMemory.cs" />
     <Compile Include="Interfaces\Memory\IModule.cs" />

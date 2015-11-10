@@ -25,5 +25,10 @@ namespace AgaHackTools.Main.Default
         ///     The original address found.
         /// </summary>
         public IntPtr OriginalAddress;
+
+        /// <summary>
+        ///     Indicates if scann was successful
+        /// </summary>
+        public bool Success;
     }
 }

@@ -196,6 +196,7 @@ namespace AgaHackTools.Memory
             {
                 if (patternMask.Where((m, b) => m == 'x' && patternBytes[b] != patternData[b + offset]).Any()) continue;
                 // If this area is reached, the pattern has been found.
+                result.Success = true;
                 result.OriginalAddress = Read<IntPtr>(offset + offsetToAdd);
                 result.Address = IntPtr.Subtract(result.OriginalAddress, (int)ImageBase);
                 result.Offset = offset;
@@ -209,7 +210,8 @@ namespace AgaHackTools.Memory
                 return result;
             }
             // If this is reached, the pattern was not found.
-            throw new Exception("The pattern " + "[" + myPattern + "]" + " was not found.");
+            result.Success = false;
+            return result;
         } 
         #endregion
     }

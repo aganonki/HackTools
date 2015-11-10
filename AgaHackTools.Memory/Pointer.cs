@@ -14,7 +14,7 @@ namespace AgaHackTools.Memory
     {
         #region Fields
 
-        public IntPtr ImageBase;
+        public IntPtr ImageBase { get; set; }
 
         #endregion
 
