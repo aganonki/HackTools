@@ -9,6 +9,7 @@ using AgaHackTools.Example.Shared;
 using AgaHackTools.Main;
 using AgaHackTools.Main.Default;
 using AgaHackTools.Main.Interfaces;
+using Json;
 
 namespace AgaHackTools.Example
 {
@@ -17,10 +18,13 @@ namespace AgaHackTools.Example
         #region Fields
 
         ISmartMemory _memory;
-        private Hashtable Configs;
-        public CSGOCurrentData CSGO;
+        private Options Configs;
+        public CSGOData CSGO;
         private List<string> moduleList;
         ModuleManager moduleManager;
+
+        private const string csgoSettings = "Settings.cfg";
+        private const string modulesCfg = "Modules.cfg";
 
         #endregion
 
@@ -32,11 +36,18 @@ namespace AgaHackTools.Example
         public CSGOProcess()
         {
             moduleManager = new ModuleManager();
-            Logger = Log.GetLogger(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            Modules = new List<IModule<CSGOCurrentData>>();
-            moduleList = new List<string>();
-            Configs = new Hashtable();
-            CSGO = new CSGOCurrentData();
+            Logger = Log.GetLogger(this.GetType().Name.ToString());
+            Modules = new List<IModule<CSGOData>>();
+            moduleList = new List<string>
+            {
+                "AgaHackTools.Example.MemoryReadingModule",
+                "AgaHackTools.Example.CSGO.Misc",
+                "AgaHackTools.Example.Triggerbot",
+            };
+            ConfigurationManagerStatic.DefaultConfig(modulesCfg, moduleList);
+            Configs = new Options();
+            ConfigurationManagerStatic.DefaultConfig(csgoSettings, Configs);
+            CSGO = new CSGOData();
             // Construct.
         }
 
@@ -48,16 +59,12 @@ namespace AgaHackTools.Example
         {
             Logger.Info(AppDomain.CurrentDomain.BaseDirectory);
             Logger.Info("Getting startup modules!");
-            //TODO REad modules and Configs from cfg file
-            //Only for now
-            //moduleList.Add("AgaHackTools.Example.Triggerbot");
-            moduleList.Add("AgaHackTools.Example.MemoryModule");
-            Configs.Add("Triggerbot",true);
-            //Only for now
+            Configs = ConfigurationManagerStatic.GetConfiguration<Options>(csgoSettings);
+            moduleList = ConfigurationManagerStatic.GetConfiguration<List<string>>(modulesCfg);
             Logger.Info("Loading modules!");
             //Load IMemory
             var memoryModuleAssembly = moduleManager.GetInstance("AgaHackTools.Memory.dll", "ISmartMemory");
-            _memory = moduleManager.ActivateInstance<ISmartMemory>(memoryModuleAssembly, "");
+            _memory = moduleManager.ActivateInstance<ISmartMemory>(memoryModuleAssembly, "csgo");
 
             Logger.Info("Loaded: Memory implementation lib");
             //Load ModuleResponsable for memoryUpdates
@@ -65,7 +72,7 @@ namespace AgaHackTools.Example
             {
                 // for 
                 var newModuleType = moduleManager.GetInstance(item, "IModule`1");
-                var newModule = moduleManager.ActivateInstance<IModule<CSGOCurrentData>>(newModuleType, new object[] {_memory, CSGO,60,Logger});
+                var newModule = moduleManager.ActivateInstance<IModule<CSGOData>>(newModuleType, new object[] {_memory, CSGO,60});
                 Modules.Add(newModule);
                 Logger.Info("Loaded: "+ newModule.Name);
             }   
@@ -75,12 +82,14 @@ namespace AgaHackTools.Example
         {
             Logger.Info("Starting modules!");
             Modules.ForEach(x=>x.Start());
+            Logger.Info("Started all modules!");
         }
 
         public void Stop()
         {
             Logger.Info("Stoping modules!");
             Modules.ForEach(x => x.Stop());
+            Logger.Info("Stopped all modules!");
         }
 
         #endregion
@@ -90,7 +99,7 @@ namespace AgaHackTools.Example
         public ILog Logger { get; set; }
         public bool IsRunning { get; }
 
-        public List<IModule<CSGOCurrentData>> Modules { get; set; }
+        public List<IModule<CSGOData>> Modules { get; set; }
 
         #endregion
 

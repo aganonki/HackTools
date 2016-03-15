@@ -90,6 +90,14 @@ namespace AgaHackTools.Example.Shared.Structs
         public char name;
         public short surfaceProps;
         public ushort flags;
+        public string ToString()
+        {
+            var text = "csurface_t\n";
+            text += name.ToString();
+            text += "\n" + surfaceProps;
+            text += "\n" + flags;
+            return text;
+        }
     };
     [StructLayout(LayoutKind.Sequential)]
     public struct cplane_t
@@ -100,6 +108,17 @@ namespace AgaHackTools.Example.Shared.Structs
         public byte signbits;
         public byte pad1;
         public byte pad2;
+        public string ToString()
+        {
+            var text = "cplane_t\n";
+            text +=normal.ToString();
+            text += "\n" + dist;
+            text += "\n" + type;
+            text += "\n" + signbits;
+            text += "\n" + pad1;
+            text += "\n" + pad2;
+            return text;
+        }
     };
     [NativeCppClass()]
     public struct CBaseTrace
@@ -112,6 +131,20 @@ namespace AgaHackTools.Example.Shared.Structs
         public ushort dispFlags;
         public bool allsolid;
         public bool startsolid;
+
+        public string ToString()
+        {
+            var text = "CBaseTrace\n";
+            text += "\n" + startpos.ToString();
+            text += "\n" + endpos.ToString();
+            text += "\n" + plane.ToString();
+            text += "\n" + fraction.ToString();
+            text += "\n" + contents.ToString();
+            text += "\n" + dispFlags.ToString();
+            text += "\n" + allsolid.ToString();
+            text += "\n" + startsolid.ToString();
+            return text;
+        }
     };
     [NativeCppClass()]
     public struct CGameTrace 
@@ -121,8 +154,22 @@ namespace AgaHackTools.Example.Shared.Structs
         public csurface_t surface;
         public int hitgroup;
         public short physicsbone;
-        public uint m_pEnt;
+        public IntPtr m_pEnt;
         public int hitbox;
+
+        public string ToString()
+        {
+            var text = "CGameTrace\n";
+            text += "\n" + basetrace.ToString();
+            text += "\n" + fractionleftsolid.ToString();
+            text += "\n" + surface.ToString();
+            text += "\n" + hitgroup.ToString();
+            text += "\n" + physicsbone.ToString();
+            text += "\n" + m_pEnt.ToString();
+            text += "\n" + hitbox.ToString();
+            return text;
+        }
+
     };
 
     public static class TraceHelp

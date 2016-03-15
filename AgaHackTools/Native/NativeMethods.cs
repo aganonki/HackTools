@@ -293,6 +293,56 @@ namespace AgaHackTools.Main.Native
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi)]
         public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
+        /// <summary>
+        /// High resolution timing method
+        /// </summary>
+        /// <param name="lpPerformanceCount"></param>
+        /// <returns></returns>
+        [DllImport("Kernel32.dll")]
+        public static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
+
+        [DllImport("user32.dll")]
+        public static extern int GetKeyState(int vKey);
+
+        public const int KEY_PRESSED = 0x8000;
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
+        public static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+        /// <summary>
+        ///     Sends the specified message to a window or windows.
+        ///     The SendMessage function calls the window procedure for the specified window and does not return until the window
+        ///     procedure has processed the message.
+        /// </summary>
+        /// <param name="hWnd">A processHandle to the window whose window procedure will receive the message.</param>
+        /// <param name="msg">The message to be sent.</param>
+        /// <param name="wParam">Additional message-specific information.</param>
+        /// <param name="lParam">Additional message-specific information.</param>
+        /// <returns>The return value specifies the result of the message processing; it depends on the message sent.</returns>
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint msg, UIntPtr wParam, IntPtr lParam);
+
+        /// <summary>
+        ///     Passes message information to the specified window procedure..
+        /// </summary>
+        /// <param name="lpPrevWndFunc">
+        ///     The previous window procedure. If this value is obtained by calling the GetWindowLong
+        ///     function with the nIndex parameter set to GWL_WNDPROC or DWL_DLGPROC, it is actually either the address of a window
+        ///     or dialog box procedure, or a special internal value meaningful only to CallWindowProc
+        /// </param>
+        /// <param name="hWnd">A Process Handle to the window procedure to receive the message.</param>
+        /// <param name="msg">The message.</param>
+        /// <param name="wParam">
+        ///     Additional message-specific information. The contents of this parameter depend on the value of the
+        ///     Msg parameter.
+        /// </param>
+        /// <param name="lParam">
+        ///     Additional message-specific information. The contents of this parameter depend on the value of the
+        ///     Msg parameter.
+        /// </param>
+        /// <returns>Type: LRESULT</returns>
+        [DllImport("user32.dll")]
+        public static extern int CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, int msg, int wParam, int lParam);
         #endregion
     }
 }

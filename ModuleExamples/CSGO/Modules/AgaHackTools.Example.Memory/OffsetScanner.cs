@@ -25,7 +25,7 @@ namespace AgaHackTools.Example.MemoryModule
             ClientState(memUtils);
             SetViewAngles(memUtils);
             SignOnState(memUtils);
-            GlowManager(memUtils);
+            GlowManager(memUtils); //Broken need new sign
             WeaponTable(memUtils);
             EntityID(memUtils);
             EntityHealth(memUtils);
@@ -117,7 +117,7 @@ namespace AgaHackTools.Example.MemoryModule
             if (lastScan.Success)
             {
                 var tmp = lastScan.Address;
-                byte tmp2 = memUtils.Read<byte>((IntPtr)(lastScan.Offset + 18));
+                byte tmp2 = memUtils["client.dll"].Read<byte>((IntPtr)(lastScan.Offset + 18));
                 Offsets.LocalPlayer = tmp + tmp2;
                 Logger.Info(ObjectEx.GetName(() => Offsets.LocalPlayer) + "\n" + Offsets.LocalPlayer.ToString("X8"));
             }
@@ -208,10 +208,8 @@ namespace AgaHackTools.Example.MemoryModule
         }
         static void GlowManager(ISmartMemory memUtils)
         {
-            var bytu = new byte[] { 0xA1, 0x00, 0x00, 0x00, 0x00, 0xC7, 0x04, 0x02, 0x00, 0x00, 0x00, 0x00, 0x89, 0x35, 0xE8, 0x8E, 0x64, 0x1F };
-            //A1 ?? ?? ?? ?? A8 01 75 4E
-            //new byte[] { 0x8D, 0x8F, 0x00, 0x00, 0x00, 0x00, 0xA1, 0x00, 0x00, 0x00, 0x00, 0xC7, 0x04, 0x02, 0x00, 0x00, 0x00, 0x00, 0x89, 0x35, 0x00, 0x00, 0x00, 0x00, 0x8B, 0x51 }
-            lastScan = memUtils["client.dll"].Find(bytu, /*"xx????x????xxx????xx????xx"*/"x????xxx????xx????", 1,false,false);
+            var bytu = new byte[] { 0xE8, 0x0, 0x0, 0x0, 0x0, 0x83, 0xC4, 0x04, 0xB8, 0x0, 0x0, 0x0, 0x0, 0xC3, 0xcc };
+            lastScan = memUtils["client.dll"].Find(bytu, "x????xxxx????xx", 9,false,false);
             if (lastScan.Success)
             {
                 //int tmp = memUtils.Read<int>((IntPtr)(lastScan.Address.ToInt32() + 1));
@@ -235,11 +233,11 @@ namespace AgaHackTools.Example.MemoryModule
         {
             lastScan = memUtils["client.dll"].Find(
                 new byte[] { 0x74, 0x72, 0x80, 0x79, 0x00, 0x00, 0x8B, 0x56, 0x00, 0x89, 0x55, 0x00, 0x74, 0x17 },
-                "xxxx??xx?xx?xx", 8,false,false);
+                "xxxx??xx?xx?xx", 8,true,true);
             if (lastScan.Success)
             {
                 //byte tmp = memUtils.Read<byte>((IntPtr)(lastScan.Address.ToInt32() + 8));
-                Offsets.EntityId = lastScan.OriginalAddress;
+                Offsets.EntityId = (IntPtr)memUtils.Read<byte>(lastScan.Offset+8);
                 Logger.Info(ObjectEx.GetName(() => Offsets.EntityId) + "\n" + Offsets.EntityId.ToString("X8"));
             }
         }
@@ -284,7 +282,7 @@ namespace AgaHackTools.Example.MemoryModule
         }
         static void PlayerBoneMatrix(ISmartMemory memUtils)
         {
-            memUtils["client.dll"].Find(
+            lastScan = memUtils["client.dll"].Find(
                 new byte[] { 0x83, 0x3C, 0xB0, 0xFF, 0x75, 0x15, 0x8B, 0x87, 0x00, 0x00, 0x00, 0x00, 0x8B, 0xCF, 0x8B, 0x17, 0x03, 0x44, 0x24, 0x0C, 0x50 },
                 "xxxxxxxx????xxxxxxxxx", 8, false, false);
             if (lastScan.Success)
@@ -296,7 +294,7 @@ namespace AgaHackTools.Example.MemoryModule
         }
         static void PlayerWeaponHandle(ISmartMemory memUtils)
         {
-            memUtils["client.dll"].Find(
+            lastScan = memUtils["client.dll"].Find(
                 new byte[] { 0x0F, 0x45, 0xF7, 0x5F, 0x8B, 0x8E, 0x00, 0x00, 0x00, 0x00, 0x5E, 0x83, 0xF9, 0xFF },
                 "xxxxxx????xxxx", 6, false, false);
             if (lastScan.Success)

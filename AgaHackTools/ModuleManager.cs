@@ -44,7 +44,7 @@ namespace AgaHackTools.Main
             }
             catch (FileNotFoundException e)
             {
-                Logger.Error("Module load assembly error " + e);
+                Logger.Error("Make sure module exists. Module load assembly error " + e.Message);
                 return null;
             }
         }

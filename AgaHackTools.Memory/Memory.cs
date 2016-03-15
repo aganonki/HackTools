@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using AgaHackTools.Main.Interfaces;
 using AgaHackTools.Main.Memory;
@@ -95,9 +96,17 @@ namespace AgaHackTools.Memory
         {
             try
             {
+                var news = new List<ProcessModule>();
                 foreach (ProcessModule module in MainProcess.Modules)
-                    if (module.FileName.EndsWith(name))
+                {
+                    if (Path.GetFileName(module.FileName).Equals(name,StringComparison.InvariantCultureIgnoreCase))
                         return module;
+                    if (module.FileName.EndsWith(name))
+                        news.Add(module);
+//                    if (module.FileName.EndsWith(name))
+//                        return module;
+                }
+                return news.Last();
             }
             catch
             {

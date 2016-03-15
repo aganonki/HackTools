@@ -162,11 +162,11 @@ namespace AgaHackTools.Memory
             }
         }
 
-        public T Read<T>(object address, bool isRelative = false) where T : struct
+        public T Read<T>(int address, bool isRelative = false) where T : struct
             => Read<T>(address.ToIntPtr(), isRelative);
 
 
-        public T ReadMultilevelPointer<T>(object address, bool isRelative = false, params object[] offsets) where T : struct
+        public T ReadMultilevelPointer<T>(int address, bool isRelative = false, params int[] offsets) where T : struct
         {
             var temp = Read<IntPtr>(address.ToIntPtr(), isRelative);
 
@@ -177,27 +177,64 @@ namespace AgaHackTools.Memory
             return Read<T>(temp + (int)offsets[offsets.Length - 1]);
         }
 
-        public T[] ReadArray<T>(object address, int count, bool isRelative = false) where T : struct
+        public T[] ReadArray<T>(int address, int count, bool isRelative = false) where T : struct
         => ReadArray<T>(address.ToIntPtr(), count, isRelative);
 
 
-        public string ReadString(object address, Encoding encoding, int maxLength = 256, bool isRelative = false)
+        public string ReadString(int address, Encoding encoding, int maxLength = 256, bool isRelative = false)
         => ReadString(address.ToIntPtr(), encoding, maxLength, isRelative);
 
 
-        public void Write(object address, byte[] data, bool isRelative = false)
+        public void Write(int address, byte[] data, bool isRelative = false)
         => Write(address.ToIntPtr(), data, isRelative);
 
 
-        public void WriteString(object address, string text, Encoding encoding, bool isRelative = false)
+        public void WriteString(int address, string text, Encoding encoding, bool isRelative = false)
         => WriteString(address.ToIntPtr(), text, encoding, isRelative);
 
 
-        public void Write<T>(object address, T value, bool isRelative = false) where T : struct
+        public void Write<T>(int address, T value, bool isRelative = false) where T : struct
         => Write(address.ToIntPtr(), value, isRelative);
 
 
-        public void WriteArray<T>(object address, T[] array, bool isRelative = false) where T : struct
+        public void WriteArray<T>(int address, T[] array, bool isRelative = false) where T : struct
+        => WriteArray(address.ToIntPtr(), array, isRelative);
+        public T Read<T>(long address, bool isRelative = false) where T : struct
+            => Read<T>(address.ToIntPtr(), isRelative);
+
+
+        public T ReadMultilevelPointer<T>(long address, bool isRelative = false, params int[] offsets) where T : struct
+        {
+            var temp = Read<IntPtr>(address.ToIntPtr(), isRelative);
+
+            for (int i = 0; i < offsets.Length - 1; i++)
+            {
+                temp = Read<IntPtr>(temp + (int)offsets[i]);
+            }
+            return Read<T>(temp + (int)offsets[offsets.Length - 1]);
+        }
+
+        public T[] ReadArray<T>(long address, int count, bool isRelative = false) where T : struct
+        => ReadArray<T>(address.ToIntPtr(), count, isRelative);
+
+
+        public string ReadString(long address, Encoding encoding, int maxLength = 256, bool isRelative = false)
+        => ReadString(address.ToIntPtr(), encoding, maxLength, isRelative);
+
+
+        public void Write(long address, byte[] data, bool isRelative = false)
+        => Write(address.ToIntPtr(), data, isRelative);
+
+
+        public void WriteString(long address, string text, Encoding encoding, bool isRelative = false)
+        => WriteString(address.ToIntPtr(), text, encoding, isRelative);
+
+
+        public void Write<T>(long address, T value, bool isRelative = false) where T : struct
+        => Write(address.ToIntPtr(), value, isRelative);
+
+
+        public void WriteArray<T>(long address, T[] array, bool isRelative = false) where T : struct
         => WriteArray(address.ToIntPtr(), array, isRelative);
 
         /// <summary>
@@ -244,7 +281,7 @@ namespace AgaHackTools.Memory
 
         #region Private methods
 
-        protected byte[] ReadBytes(IntPtr address, int count)
+        public byte[] ReadBytes(IntPtr address, int count)
         {
             if (count == 0)
                 return new byte[0];

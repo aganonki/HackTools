@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using AgaHackTools.Main.Default;
 using AgaHackTools.Main.Interfaces;
+using AgaHackTools.Main.Native;
 
 namespace AgaHackTools.Main.AbstractImplementations
 {
@@ -15,41 +18,38 @@ namespace AgaHackTools.Main.AbstractImplementations
     {
         #region Fields
 
-        private int _interval;
+        private float _interval;
         private T _state;
-        private Timer _timer;
-        private TimerCallback callback;
+        //private Timer _timer;
+        private Task Loop;
+        //private TimerCallback callback;
+        private double LastFrameTick = 0;
+        private double TimeBetweenFrame = 0;
+        private double WaitTilNextFrame = 0;
+
 
         #endregion
 
         #region Constructors
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="updateData">Object that will be used in Process method</param>
-        /// <param name="ticks">Ticks per second</param>
-        protected Module(T updateData,int ticks)
-        {
-
-            _state = updateData;
-            IsRunning = false;
-            callback += Process;
-            _timer = new Timer(callback, _state, Timeout.Infinite, Timeout.Infinite);
-            if(Logger== null)
-            Logger =  Log.GetLogger(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            Ticks = ticks;
-        }
-
         /// <summary>
         /// Constructor for module
         /// </summary>
         /// <param name="updateData">Object that will be used in Process method</param>
         /// <param name="ticks">Ticks per second</param>
         /// <param name="logger">Logger instance</param>
-        protected Module(T updateData,ILog logger, int ticks = 60) : this(updateData, ticks)
-        {         
-            Logger = logger;
+        protected Module(T updateData,ILog logger = null, int ticks = 60)
+        {
+            _state = updateData;
+            IsRunning = false;
+            //callback += Process;
+            //_timer = new Timer(callback, _state, Timeout.Infinite, Timeout.Infinite);
+            Loop = new Task(() => Process(_state));
+            
+            if (logger == null)
+                Logger = Log.GetLogger(this.Name.ToString());
+            else
+                Logger = logger;
+            Ticks = ticks;
         }
 
         #endregion
@@ -58,8 +58,9 @@ namespace AgaHackTools.Main.AbstractImplementations
 
         public virtual void Dispose()
         {
-            _timer.Change(int.MaxValue, _interval);
-            _timer.Dispose();
+            //_timer.Change(long.MaxValue, (long)_interval);
+            //_timer.Dispose();
+            Loop.Dispose();
         }
 
         /// <summary>
@@ -67,7 +68,8 @@ namespace AgaHackTools.Main.AbstractImplementations
         /// </summary>
         public virtual void Start()
         {
-            _timer.Change(_interval, _interval);
+            //_timer.Change(_interval, _interval);
+            Loop.Start();
             IsRunning = true;
             //Logger.Info("Started: " + Name);
         }
@@ -77,7 +79,6 @@ namespace AgaHackTools.Main.AbstractImplementations
         /// </summary>
         public virtual void Stop()
         {
-            _timer.Change(int.MaxValue, _interval);
             IsRunning = false;
         }
 
@@ -86,11 +87,9 @@ namespace AgaHackTools.Main.AbstractImplementations
         #region Properties
 
         //public Hashtable Configuration { get; set; }
-        public int Ticks {
+        public float Ticks {
             get { return 1000/_interval;}
-            set { _interval = 1000/value;
-                if (IsRunning)
-                    _timer.Change(0, _interval);
+            set { _interval = 1000f/value;
             }
         }
 
@@ -109,8 +108,15 @@ namespace AgaHackTools.Main.AbstractImplementations
         /// <param name="state"></param>
         protected virtual void Process(object state)
         {
-            //Do stuff here
-            OnUpdate?.Invoke(this,(T)state);
+            while (IsRunning)
+            {
+                //Do stuff here
+                OnUpdate?.Invoke(this, (T) state);
+                PreciseThreadStop();
+                CalculateFramerate();
+                //Thread.Sleep((int)_interval - 6);
+                //Thread.Sleep((int)_interval);
+            }
         }
 
         #endregion
@@ -134,6 +140,54 @@ namespace AgaHackTools.Main.AbstractImplementations
         {
             Dispose();
             // Construct.
+        }
+
+        private void PreciseThreadStop()
+        {
+            if (LastFrameTick != 0)
+            {               
+                TimeBetweenFrame = (QueryPerformanceCounter() - LastFrameTick);
+                if (TimeBetweenFrame < _interval)
+                {
+                    //WaitTilNextFrame = QueryPerformanceCounter() + (_interval - TimeBetweenFrame);
+                    //while (QueryPerformanceCounter() <= WaitTilNextFrame) ;
+                    Thread.Sleep((int)(_interval - TimeBetweenFrame));
+                }
+                
+            }
+            LastFrameTick = QueryPerformanceCounter();
+        }
+        private static double QueryPerformanceCounter()
+        {
+            long tmp;
+            NativeMethods.QueryPerformanceCounter(out tmp);
+            return tmp / (double)1000;
+        }
+        private double lastTick;
+        private int lastFrameRate;
+        private int frameRate;
+
+        public int FrameRate
+        {
+            get
+            {
+                return lastFrameRate;
+            }
+        }
+
+        private Stopwatch fps = new Stopwatch();
+        private void CalculateFramerate()
+        {
+            if (!fps.IsRunning)
+                fps.Start();
+            else
+            if (fps.Elapsed.TotalMilliseconds >= 1000)
+            {
+                fps.Reset();
+                //Logger.Info(FrameRate);
+                lastFrameRate = 0;
+            }
+            lastFrameRate++;
         }
 
         #endregion

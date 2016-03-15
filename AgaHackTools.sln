@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.Trigge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.Shared", "ModuleExamples\CSGO\Resources\AgaHackTools.Example.Shared\AgaHackTools.Example.Shared.csproj", "{64B5668A-40D2-459A-9C7B-1AC5CE75DD93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.MemoryModule", "ModuleExamples\CSGO\Modules\AgaHackTools.Example.Memory\AgaHackTools.Example.MemoryModule.csproj", "{F07B540F-BEB1-471F-AF80-B7358122904A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.MemoryReadingModule", "ModuleExamples\CSGO\Modules\AgaHackTools.Example.Memory\AgaHackTools.Example.MemoryReadingModule.csproj", "{F07B540F-BEB1-471F-AF80-B7358122904A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{12144BB9-13F3-4EAF-946E-9238059DC6E0}"
 EndProject
@@ -24,6 +24,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{85166604-2627-4E86-A7E8-FBAB6C115CB6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Json", "Configurations\Json\Json.csproj", "{737E5A90-7692-4608-8D8D-6571041829F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgaHackTools.Example.CSGO.Misc", "ModuleExamples\CSGO\Modules\AgaHackTools.Example.CSGO.Misc\AgaHackTools.Example.CSGO.Misc.csproj", "{6C733D74-A2FB-48A2-A6E8-4BC459A2AF1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Internal", "ModuleExamples\CSGO\Modules\Example.Internal\Example.Internal.csproj", "{F72A46A6-24D1-4C5E-A754-5C0A756243BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +101,22 @@ Global
 		{737E5A90-7692-4608-8D8D-6571041829F8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{737E5A90-7692-4608-8D8D-6571041829F8}.Release|x86.ActiveCfg = Release|Any CPU
 		{737E5A90-7692-4608-8D8D-6571041829F8}.Release|x86.Build.0 = Release|Any CPU
+		{6C733D74-A2FB-48A2-A6E8-4BC459A2AF1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C733D74-A2FB-48A2-A6E8-4BC459A2AF1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C733D74-A2FB-48A2-A6E8-4BC459A2AF1C}.Debug|x86.ActiveCfg = Debug|x86
+		{6C733D74-A2FB-48A2-A6E8-4BC459A2AF1C}.Debug|x86.Build.0 = Debug|x86
+		{6C733D74-A2FB-48A2-A6E8-4BC459A2AF1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C733D74-A2FB-48A2-A6E8-4BC459A2AF1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C733D74-A2FB-48A2-A6E8-4BC459A2AF1C}.Release|x86.ActiveCfg = Release|x86
+		{6C733D74-A2FB-48A2-A6E8-4BC459A2AF1C}.Release|x86.Build.0 = Release|x86
+		{F72A46A6-24D1-4C5E-A754-5C0A756243BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F72A46A6-24D1-4C5E-A754-5C0A756243BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F72A46A6-24D1-4C5E-A754-5C0A756243BA}.Debug|x86.ActiveCfg = Debug|x86
+		{F72A46A6-24D1-4C5E-A754-5C0A756243BA}.Debug|x86.Build.0 = Debug|x86
+		{F72A46A6-24D1-4C5E-A754-5C0A756243BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F72A46A6-24D1-4C5E-A754-5C0A756243BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F72A46A6-24D1-4C5E-A754-5C0A756243BA}.Release|x86.ActiveCfg = Release|x86
+		{F72A46A6-24D1-4C5E-A754-5C0A756243BA}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,5 +128,7 @@ Global
 		{F07B540F-BEB1-471F-AF80-B7358122904A} = {B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}
 		{12144BB9-13F3-4EAF-946E-9238059DC6E0} = {B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}
 		{737E5A90-7692-4608-8D8D-6571041829F8} = {85166604-2627-4E86-A7E8-FBAB6C115CB6}
+		{6C733D74-A2FB-48A2-A6E8-4BC459A2AF1C} = {B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}
+		{F72A46A6-24D1-4C5E-A754-5C0A756243BA} = {B353B3FE-2326-47E7-8CB5-3DB4B6DD88BE}
 	EndGlobalSection
 EndGlobal

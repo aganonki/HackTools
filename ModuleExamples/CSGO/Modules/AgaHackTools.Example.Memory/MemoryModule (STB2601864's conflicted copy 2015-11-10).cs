@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 using AgaHackTools.Example.Shared;
@@ -20,6 +19,7 @@ namespace AgaHackTools.Example.MemoryModule
 
         private ISmartMemory _memory;
 
+        private CreateInterfaceFn EngineCreateInterface;
         private bool offsetsLoaded;
 
         #endregion
@@ -31,14 +31,13 @@ namespace AgaHackTools.Example.MemoryModule
             _memory= memory;
             offsetsLoaded = false;
             OnUpdate += MemoryModule_Update;
-            CSGOData.Memory = _memory;
         }
         public MemoryModule(ISmartMemory memory, CSGOData csgo, int tick = 60) : this(memory, csgo, tick, Log.GetLogger(typeof(MemoryModule).Name))
         {
         }
-        
         private void MemoryModule_Update(object sender, CSGOData csgo)
         {
+            Logger.Info(FrameRate);
             if (!_memory.IsRunning)
             {
                 _memory.Load();
@@ -47,16 +46,18 @@ namespace AgaHackTools.Example.MemoryModule
 
             if (!offsetsLoaded)
             {
-                LoadOffsets(csgo);
+                LoadOffsets();
                 return;
             }
 
             //Reading all data here
             try
             {
+                GetSignOnState(csgo);
+                if(csgo.IsNotPlaying)
+                    return;
                 LocalPlayer(csgo);
                 Entities(csgo);
-
             }
             catch (Win32Exception e)
             {
@@ -76,9 +77,7 @@ namespace AgaHackTools.Example.MemoryModule
 
         private void LocalPlayer(CSGOData csgo)
         {
-            CSGOData.LocalPlayerAddress = _memory["client.dll"].Read<IntPtr>(Offsets.LocalPlayer);
-            CSGOData.LocalPlayer = _memory["client.dll"].Read<Player>(CSGOData.LocalPlayerAddress);
-            CSGOData.LocalPlayer = _memory["client.dll"].ReadArray<byte>()<Player>(CSGOData.LocalPlayerAddress,PlayerSize);
+            CSGOData.LocalPlayer = _memory["client.dll"].Read<Player>(Offsets.LocalPlayer);
             CSGOData.LocalPlayerWeapon = CSGOData.LocalPlayer.GetActiveWeapon(_memory);
         }
         private void Entities(CSGOData csgo)
@@ -124,22 +123,22 @@ namespace AgaHackTools.Example.MemoryModule
             csgo.SignOnState = (SignOnState)_memory.Read<int>(clientStateAddress + (int)Offsets.SignOnState);
         }
 
-        private unsafe void LoadOffsets(CSGOData csgo)
+        private unsafe void LoadOffsets()
         {
+            //TODO Add scanning
+            
             Logger.Info("LoadOffsets");
             OffsetScanner.ScanOffsets(_memory);
 
             if (_memory.Internal)
             {
-                Logger.Info("Loading internal stuff");
-                var createInter= _memory["engine.dll"]["CreateInterface"];
+               var createInter= _memory["engine.dll"]["CreateInterface"];
                 Logger.Info("New Interface name: "+createInter.Name + "\nAddress" +createInter.BaseAddress);
-                csgo.EngineCreateInterface = createInter.GetDelegate<CreateInterfaceFn>();
+                EngineCreateInterface = createInter.GetDelegate<CreateInterfaceFn>();
                 var returncode = 0;
-                var IEngineTracePtr = csgo.EngineCreateInterface(IEngineTraceVTable,ref returncode);
+                var IEngineTracePtr = EngineCreateInterface(IEngineTraceVTable,ref returncode);
                 var IEngineTrace = new VirtualClass(IEngineTracePtr);
                 var traceFunction = IEngineTrace.GetVirtualFunction<IEngineTrace.TraceRay>(5 /*TraceRayindex*/);
-                csgo.TraceRay = new IEngineTrace(traceFunction,_memory);
                 Logger.Info("New VClass name: " + IEngineTraceVTable + "\nAddress: " + IEngineTrace.ClassAddress.ToString());
             }
             offsetsLoaded = true;

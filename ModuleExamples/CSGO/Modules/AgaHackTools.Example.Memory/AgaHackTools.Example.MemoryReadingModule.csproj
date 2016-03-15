@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AgaHackTools.Example.MemoryModule</RootNamespace>
-    <AssemblyName>AgaHackTools.Example.MemoryModule</AssemblyName>
+    <AssemblyName>AgaHackTools.Example.MemoryReadingModule</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

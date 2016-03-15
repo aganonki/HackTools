@@ -11,8 +11,10 @@ namespace AgaHackTools.Example.Shared
         public Options()
         {
             Triggerbot = true;
+            AutoPistol = true;
         }
 
         public bool Triggerbot;
+        public bool AutoPistol;
     }
 }

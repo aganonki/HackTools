@@ -16,7 +16,7 @@ namespace AgaHackTools.Main.Interfaces
         /// <summary>
         /// Ticks module thread will repeat per second
         /// </summary>
-        int Ticks { get; set; }
+        float Ticks { get; set; }
         /// <summary>
         /// Configurations
         /// </summary>
@@ -33,5 +33,7 @@ namespace AgaHackTools.Main.Interfaces
         /// On update event
         /// </summary>
         event EventHandler<T> OnUpdate;
+
+        int FrameRate { get; }
     }
 }

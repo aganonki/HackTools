@@ -51,16 +51,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CSGOCurrentData.cs" />
+    <Compile Include="EntityWrap.cs" />
     <Compile Include="IEngineTrace.cs" />
     <Compile Include="InternalDelegates.cs" />
-    <Compile Include="LocalPlayer.cs" />
+    <Compile Include="Structs\ClassID.cs" />
+    <Compile Include="Structs\Entity.cs" />
+    <Compile Include="Structs\LocalPlayer.cs" />
     <Compile Include="Math\matrix3x4_t.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\VectorAligned.cs" />
     <Compile Include="Offsets.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structs\Player.cs" />
     <Compile Include="Structs\Ray.cs" />
+    <Compile Include="Structs\SignOnState.cs" />
+    <Compile Include="Structs\Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\AgaHackTools\AgaHackTools.Main.csproj">
