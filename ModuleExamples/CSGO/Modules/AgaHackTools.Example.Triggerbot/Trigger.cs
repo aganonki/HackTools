@@ -56,10 +56,18 @@ namespace AgaHackTools.Example.Triggerbot
                 return;
             if (CSGOData.LocalPlayer.m_iCrosshairId < 1)
                 return;
+            try
+            {
+
             Player target = CSGOData.Entity[CSGOData.LocalPlayer.m_iCrosshairId - 1].Player;
             if (target.IsValid()&& target.m_iTeam != CSGOData.LocalPlayer.m_iTeam)
                 return;
             DefaultInput.LeftMouseClick(50);       
+            }
+            catch (Exception e)
+            {
+                Logger.Error(Name+" module failed "+e);
+            }
         }
     }
 }

@@ -78,7 +78,6 @@ namespace AgaHackTools.Example.MemoryModule
         {
             CSGOData.LocalPlayerAddress = _memory["client.dll"].Read<IntPtr>(Offsets.LocalPlayer);
             CSGOData.LocalPlayer = _memory["client.dll"].Read<Player>(CSGOData.LocalPlayerAddress);
-            CSGOData.LocalPlayer = _memory["client.dll"].ReadArray<byte>()<Player>(CSGOData.LocalPlayerAddress,PlayerSize);
             CSGOData.LocalPlayerWeapon = CSGOData.LocalPlayer.GetActiveWeapon(_memory);
         }
         private void Entities(CSGOData csgo)
