@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using AgaHackTools.Example.Shared;
 using AgaHackTools.Example.Shared.Structs;
@@ -62,12 +63,20 @@ namespace AgaHackTools.Example.Triggerbot
             Player target = CSGOData.Entity[CSGOData.LocalPlayer.m_iCrosshairId - 1].Player;
             if (target.IsValid()&& target.m_iTeam != CSGOData.LocalPlayer.m_iTeam)
                 return;
-            DefaultInput.LeftMouseClick(50);       
+            attack();
+            //DefaultInput.LeftMouseClick(50);       
             }
             catch (Exception e)
             {
                 Logger.Error(Name+" module failed "+e);
             }
+        }
+        private void attack(int delay = 25)
+        {
+            if (!CSGOData.LocalPlayer.IsValid()) return;
+            _memory["client.dll"].Write((Offsets.Attack), 5);
+            Thread.Sleep(delay);
+            _memory["client.dll"].Write(Offsets.Attack, 4);
         }
     }
 }
