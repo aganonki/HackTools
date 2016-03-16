@@ -53,11 +53,14 @@
   <ItemGroup>
     <Compile Include="AbstractImplementations\Module.cs" />
     <Compile Include="Configurations\Config.cs" />
+    <Compile Include="Configurations\IConfiguration.cs" />
+    <Compile Include="Configurations\XmlConfiguration.cs" />
     <Compile Include="Default\DefaultInput.cs" />
     <Compile Include="Default\Log.cs" />
     <Compile Include="Default\Pattern.cs" />
     <Compile Include="Default\ScanResult.cs" />
     <Compile Include="Extensions\Object.cs" />
+    <Compile Include="Helpers\XmlHelper.cs" />
     <Compile Include="Hook\WndProc\IPulsable.cs" />
     <Compile Include="Hook\WndProc\IWIndowEngine.cs" />
     <Compile Include="Hook\WndProc\UpdatePulseArgs.cs" />
